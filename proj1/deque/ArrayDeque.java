@@ -1,6 +1,9 @@
 package deque;
 
-public class ArrayDeque<T> {
+
+import java.util.Iterator;
+
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private T[] array;
     private int size;
     private int headIdx;
@@ -98,6 +101,58 @@ public class ArrayDeque<T> {
             return null;
         } else {
             return array[(index + headIdx) % array.length];
+        }
+    }
+
+    public void printDeque() {
+        String[] deque = new String[size];
+        for (int i = 0; i < size; i++) {
+            deque[i] = array[(i + headIdx) % array.length].toString();
+        }
+        System.out.println(String.join(" ", deque));
+    }
+
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof LinkedListDeque) {
+            return false;
+        } else if (o == null) {
+            return false;
+        } else if (o == this) {
+            return false;
+        } else {
+            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+            if (size != other.size()) {
+                return false;
+            } else {
+                for (int i = 0; i < size; i++) {
+                    if (other.get(i) != get(i)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int index;
+
+        ArrayDequeIterator() {
+            index = 0;
+        }
+
+        public boolean hasNext() {
+            return index < size;
+        }
+
+        public T next() {
+            T item = get(index);
+            index += 1;
+            return item;
         }
     }
 }
