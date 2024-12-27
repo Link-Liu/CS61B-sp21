@@ -1,5 +1,6 @@
 package deque;
 
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -140,5 +141,56 @@ public class ArrsyDequeTest {
         assertEquals("Should have the same value", "I", ad1.get(0));
         assertEquals("Should have the same value", "love", ad1.get(1));
         assertEquals("Should have the same value", "U", ad1.get(2));
+    }
+    @Test
+    public void equalTest1() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        for (int i = 0; i < 10; i++) {
+            lld1.addLast(i);
+            lld2.addLast(i);
+        }
+        assertTrue(lld1.equals(lld2));
+    }
+
+    @Test
+    public void equalTest2() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        for (int i = 0; i < 10; i++) {
+            lld1.addLast(i);
+            lld2.addLast(i);
+        }
+        assertTrue(lld1.equals(lld2));
+    }
+
+    @Test
+    public void randomizedTest() {
+        ArrayDeque<Integer> R = new ArrayDeque<>();
+        int N = 500000;
+        for (int i = 0; i < N; i += 1) {
+            int operationNumber = StdRandom.uniform(0, 4);
+            if (operationNumber == 0) {
+                // addLast
+                int randVal = StdRandom.uniform(0, 100);
+                R.addLast(randVal);
+            } else if (operationNumber == 1) {
+                // addFirst
+                int randVal = StdRandom.uniform(0, 100);
+                R.addLast(randVal);
+            } else if (operationNumber == 2) {
+                // removeLast
+                if (R.size() == 0) {
+                    continue;
+                }
+                R.removeLast();
+            } else if (operationNumber == 3) {
+                // removeFirst
+                if (R.size() == 0) {
+                    continue;
+                }
+                R.removeFirst();
+            }
+        }
     }
 }

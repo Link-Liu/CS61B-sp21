@@ -1,6 +1,5 @@
 package deque;
 
-
 import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
@@ -16,21 +15,15 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     private void resize(int capacity) {
-        int p = headIdx;
-        int n = size;
-        int r;
         T[] a = (T[]) new Object[capacity];
-        if (headIdx >= tailIdx) {
-            r = n - p;
-            System.arraycopy(array, p, a, 0, r);
-            System.arraycopy(array, 0, a, r, p);
-        } else {
-            r = tailIdx - headIdx;
-            System.arraycopy(array, p, a, 0, r);
+        int itemIdx = 0;
+        for (int i = 0; i < size; i++) {
+            itemIdx = (headIdx + i) % array.length;
+            a[i] = array[itemIdx];
         }
         array = a;
         headIdx = 0;
-        tailIdx = n;
+        tailIdx = size;
     }
     @Override
     public void addFirst(T item) {
@@ -114,17 +107,25 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     public boolean equals(Object o) {
+        if (!(o instanceof Deque)) {
+            return false;
+        }
         if (o == null) {
             return false;
         } else if (o == this) {
             return true;
         } else {
-            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+            Deque<T> other = (Deque<T>) o;
+            if (o instanceof ArrayDeque) {
+                other = (ArrayDeque<T>) o;
+            } else {
+                other = (LinkedListDeque<T>) o;
+            }
             if (size != other.size()) {
                 return false;
             } else {
                 for (int i = 0; i < size; i++) {
-                    if (other.get(i) != get(i)) {
+                    if (!(get(i).equals(other.get(i)))) {
                         return false;
                     }
                 }
