@@ -130,4 +130,15 @@ public class ArrsyDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.get(i), 0.0);
         }
     }
+
+    @Test
+    public void getStringTest() {
+        ArrayDeque<String> ad1 =new ArrayDeque<>();
+        ad1.addFirst("I");
+        ad1.addLast("love");
+        ad1.addLast("U");
+        assertEquals("Should have the same value", "I", ad1.get(0));
+        assertEquals("Should have the same value", "love", ad1.get(1));
+        assertEquals("Should have the same value", "U", ad1.get(2));
+    }
 }

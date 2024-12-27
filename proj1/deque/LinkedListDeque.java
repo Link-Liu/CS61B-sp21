@@ -43,25 +43,21 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         sentBack.prev = sentFront;
         size = 0;
     }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
+    @Override
     public int size() {
         return size;
     }
-
+    @Override
     public void addFirst(T item) {
         sentFront.next = new Node(item, sentFront, sentFront.next);
         size++;
     }
-
+    @Override
     public void addLast(T item) {
         sentBack.prev = new Node(item, sentBack.prev, sentBack);
         size++;
     }
-
+    @Override
     public void printDeque() {
         String[] deque = new String[size];
         int i = 0;
@@ -73,7 +69,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         }
         System.out.println(String.join(" ", deque));
     }
-
+    @Override
     public T removeFirst() {
         if (sentFront.next == sentBack) {
             return null;
@@ -85,7 +81,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
             return value;
         }
     }
-
+    @Override
     public T removeLast() {
         if (sentBack.prev == sentFront) {
             return null;
@@ -97,7 +93,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
             return value;
         }
     }
-
+    @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
@@ -146,12 +142,10 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof LinkedListDeque) {
-            return false;
-        } else if (o == null) {
+        if (o == null) {
             return false;
         } else if (o == this) {
-            return false;
+            return true;
         } else {
             LinkedListDeque<T> other = (LinkedListDeque<T>) o;
             if (size != other.size) {

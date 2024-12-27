@@ -32,7 +32,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         headIdx = 0;
         tailIdx = n;
     }
-
+    @Override
     public void addFirst(T item) {
         headIdx--;
         headIdx = (array.length + headIdx) % array.length;
@@ -42,7 +42,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             resize(2 * array.length);
         }
     }
-
+    @Override
     public void addLast(T item) {
 
         array[tailIdx] = item;
@@ -53,15 +53,11 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             resize(2 * array.length);
         }
     }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
+    @Override
     public int size() {
         return size;
     }
-
+    @Override
     public T removeFirst() {
         if (isEmpty()) {
             return null;
@@ -73,7 +69,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         checkUserate();
         return value;
     }
-
+    @Override
     public T removeLast() {
         if (isEmpty()) {
             return null;
@@ -95,15 +91,16 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             }
         }
     }
-
+    @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
         } else {
-            return array[(index + headIdx) % array.length];
+            int itemIdx = (headIdx + index) % array.length;
+            return array[itemIdx];
         }
     }
-
+    @Override
     public void printDeque() {
         String[] deque = new String[size];
         for (int i = 0; i < size; i++) {
@@ -117,12 +114,10 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof LinkedListDeque) {
-            return false;
-        } else if (o == null) {
+        if (o == null) {
             return false;
         } else if (o == this) {
-            return false;
+            return true;
         } else {
             LinkedListDeque<T> other = (LinkedListDeque<T>) o;
             if (size != other.size()) {
