@@ -15,7 +15,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         tailIdx = 0;
     }
 
-    public void resize(int capacity) {
+    private void resize(int capacity) {
         int p = headIdx;
         int n = size;
         int r;
@@ -82,7 +82,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         return value;
     }
 
-    public static final int CHECK_SIZE = 16;
+    private static final int CHECK_SIZE = 16;
     private void checkUserate() {
         if (array.length >= CHECK_SIZE) {
             double userate = (double) size / array.length;

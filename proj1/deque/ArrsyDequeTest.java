@@ -99,8 +99,8 @@ public class ArrsyDequeTest {
 
         boolean passed1 = false;
         boolean passed2 = false;
-        assertEquals("Should return null when removeFirst is called on an empty Deque,", null, lld1.removeFirst());
-        assertEquals("Should return null when removeLast is called on an empty Deque,", null, lld1.removeLast());
+        assertEquals("Should return null when empty", null, lld1.removeFirst());
+        assertEquals("Should return null when empty", null, lld1.removeLast());
 
     }
 
@@ -133,7 +133,7 @@ public class ArrsyDequeTest {
 
     @Test
     public void getStringTest() {
-        ArrayDeque<String> ad1 =new ArrayDeque<>();
+        ArrayDeque<String> ad1 = new ArrayDeque<>();
         ad1.addFirst("I");
         ad1.addLast("love");
         ad1.addLast("U");

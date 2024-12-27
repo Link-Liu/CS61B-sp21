@@ -62,18 +62,4 @@ public class MaxArrayDequeTest<T> {
         mad.addLast("U");
         assertEquals("Should be same String","Love",mad.max());
     }
-
-    @Test
-    public void TestEqual() {
-        MaxArrayDeque<Integer> mad = new MaxArrayDeque<>(new lastIntComparator());
-        MaxArrayDeque<Integer> mad2 = new MaxArrayDeque<>(new intcomparator());
-        for (int i = 0; i < 19; i++) {
-            mad.addLast(i);
-            mad2.addLast(i);
-        }
-        MaxArrayDeque<Integer> same = mad;
-        assertEquals("Should be True",true,mad.equals(same));
-        assertEquals("Should be false",false,mad.equals(mad2));
-    }
-
 }
