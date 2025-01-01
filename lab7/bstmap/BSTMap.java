@@ -5,21 +5,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class BSTMap<K extends Comparable,V> implements Map61B<K, V> {
+public class BSTMap<K extends Comparable<K>,V> implements Map61B<K, V> {
     class BSTNode {
         K key;
         V value;
         BSTNode left;
         BSTNode right;
 
-        public BSTNode(K key, V value) {
+        private BSTNode(K key, V value) {
             this.key = key;
             this.value = value;
             this.left = null;
             this.right = null;
         }
         /*return 2 if both R and L exist,return 0 if both R and L don't exist,-1 if only L exist,1 if only R exist*/
-        public int getChildNumber() {
+        private int getChildNumber() {
             if (left != null && right != null) {return 2;}
             else if (right != null && left == null) {return 1;}
             else if (left == null && right == null) {return 0;}
@@ -38,7 +38,7 @@ public class BSTMap<K extends Comparable,V> implements Map61B<K, V> {
     /* Returns true if this map contains a mapping for the specified key. */
     public boolean containsKey(K key) {return containsKeyHelper(root, key);}
 
-    public boolean containsKeyHelper(BSTNode bstNode, K key) {
+    private boolean containsKeyHelper(BSTNode bstNode, K key) {
         if (bstNode == null) {return false;}
         if (bstNode.key.compareTo(key) == 0) {return true;}
         if (bstNode.key.compareTo(key) > 0) {return containsKeyHelper(bstNode.left, key);}
@@ -50,7 +50,7 @@ public class BSTMap<K extends Comparable,V> implements Map61B<K, V> {
      */
     public V get(K key) {return getHelper(root, key);}
 
-    public V getHelper(BSTNode bstNode, K key) {
+    private V getHelper(BSTNode bstNode, K key) {
         if (bstNode == null) {return null;}
         if (bstNode.key.compareTo(key) == 0) {return bstNode.value;}
         if (bstNode.key.compareTo(key) < 0) {return getHelper(bstNode.right, key);}
@@ -63,7 +63,7 @@ public class BSTMap<K extends Comparable,V> implements Map61B<K, V> {
     /* Associates the specified value with the specified key in this map. */
     public void put(K key, V value) {root = putHelper(root, key, value);size++;}
 
-    public BSTNode putHelper(BSTNode bstNode, K key, V value) {
+    private BSTNode putHelper(BSTNode bstNode, K key, V value) {
         if (bstNode == null) {return new BSTNode(key, value);}
         int cmp = bstNode.key.compareTo(key);
         if (cmp < 0) {bstNode.right = putHelper(bstNode.right, key, value);}
@@ -100,7 +100,7 @@ public class BSTMap<K extends Comparable,V> implements Map61B<K, V> {
         return null;
     }
 
-    public BSTNode removeHelper(BSTNode bstNode, K key) {
+    private BSTNode removeHelper(BSTNode bstNode, K key) {
         if (bstNode == null) {return null;}
         if (bstNode.key.compareTo(key) < 0) {bstNode.right =  removeHelper(bstNode.right, key);}
         else if (bstNode.key.compareTo(key) > 0) {bstNode.left =  removeHelper(bstNode.left, key);}
@@ -140,6 +140,19 @@ public class BSTMap<K extends Comparable,V> implements Map61B<K, V> {
 
     public Iterator<K> iterator() {
         return keySet().iterator();
+    }
+
+    public void printInOrder() {
+        printInOrder(root);
+    }
+
+    private void printInOrder(BSTNode node) {
+        if (node == null) {
+            return;
+        }
+        printInOrder(node.left);
+        System.out.println(node.key.toString() + " -> " + node.value.toString());
+        printInOrder(node.right);
     }
 
 }
