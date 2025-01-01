@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class BSTMap<K extends Comparable<K>,V> implements Map61B<K, V> {
-    class BSTNode {
+    private class BSTNode {
         K key;
         V value;
         BSTNode left;
@@ -118,7 +118,7 @@ public class BSTMap<K extends Comparable<K>,V> implements Map61B<K, V> {
         return bstNode;
     }
 
-    public BSTNode getLeftBiggestChild(BSTNode bstNode) {
+    private BSTNode getLeftBiggestChild(BSTNode bstNode) {
         if (bstNode.right == null) {return bstNode;}
         return getLeftBiggestChild(bstNode.right);
     }
