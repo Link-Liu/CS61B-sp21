@@ -1,6 +1,6 @@
 # Gitlet Design Document
 
-**Name**:
+**Name**: LIU Chenyu
 
 ## Classes and Data Structures
 
