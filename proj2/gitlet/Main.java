@@ -13,12 +13,38 @@ public class Main {
         String firstArg = args[0];
         switch(firstArg) {
             case "init":
-                // TODO: handle the `init` command
+                Repository.gitInit();
                 break;
             case "add":
-                // TODO: handle the `add [filename]` command
+                Repository.gitAdd(args[1]);
                 break;
-            // TODO: FILL THE REST IN
+            case "rm":
+                Repository.gitRemove(args[1]);
+                break;
+            case "log":
+                Repository.gitLog();
+                break;
+            case "global-log":
+                Repository.gitGlobalLog();
+                break;
+            case "find":
+                Repository.gitFind(args[1]);
+                break;
+            case "status":
+                Repository.gitStatus();
+                break;
+            case "checkout":
+                int cmdLength = args.length;
+                switch (cmdLength) {
+                    case 2:
+                    case 3:
+                        Repository.gitCheckout3(args[2]);
+                        break;
+                    case 4:
+                        Repository.gitCheckout4(args[1], args[3]);
+                        break;
+                }
+
         }
     }
 }
