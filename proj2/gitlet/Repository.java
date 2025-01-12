@@ -121,17 +121,7 @@ public class Repository {
     /*从head找文件*/
     public static void gitCheckout3(String fileName) {
         String lookedId = Head.getCurHead();
-        Commit lookedCommit = Commit.load(lookedId);
-        TreeMap<String, String> referenceMap = lookedCommit.getBlobTreeMap();
-        if (referenceMap.containsKey(fileName)) {
-            String lookedHash = referenceMap.get(fileName);
-            File lookedFile = join(BLOB_DIR, lookedHash);
-            byte[] lookedContents = readContents(lookedFile);
-            File fileToCheckout = join(CWD, fileName);
-            writeContents(fileToCheckout, (Object) lookedContents);
-        }else {
-            System.out.println("File does not exist.");
-        }
+        gitCheckout4(lookedId, fileName);
     }
     /*从特定commit找文件*/
     public static void gitCheckout4(String commitId, String fileName) {
