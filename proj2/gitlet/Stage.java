@@ -11,17 +11,25 @@ import static gitlet.Repository.*;
 import static gitlet.Utils.writeObject;
 
 public class Stage implements Serializable {
-    private static TreeMap<String, String> addStage;
-    private static TreeSet<String> rmStages;
+    private TreeMap<String, String> addStage;
+    private TreeSet<String> rmStages;
 
     Stage() {
-        addStage = new TreeMap<>();
-        rmStages = new TreeSet<>();
+        this.addStage = new TreeMap<>();
+        this.rmStages = new TreeSet<>();
     }
 
     public static Stage load() {
+        if (!STAGE_DIR.exists()) {
+            // If the stage file doesn't exist, create a new Stage and save it
+            Stage newStage = new Stage();
+            newStage.save();
+            return newStage;
+        }
+        // Otherwise read the existing stage data
         return readObject(STAGE_DIR, Stage.class);
     }
+
 
     public void clear() {
         addStage.clear();
@@ -40,8 +48,8 @@ public class Stage implements Serializable {
 
     public TreeMap<String, String> getAddStage() {return addStage;}
 
-    public static boolean remove(String filename) {
-        if (!addStage.containsKey(filename)) {
+    public boolean remove(String filename) {
+        if (!getAddStage().containsKey(filename)) {
             Commit curCommit = Commit.load(Head.getCurHead());
             if (!curCommit.getBlobTreeMap().containsKey(filename)) {
                 return false;

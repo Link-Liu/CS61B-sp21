@@ -57,8 +57,6 @@ public class Repository {
     }
 
     public static void gitCommit(String message) {
-        Stage stage1 = Stage.load();
-        System.out.println(stage1.getAddStage());
         if (message == null) {
             System.out.println("Please enter a commit message.");
         }
@@ -67,7 +65,8 @@ public class Repository {
     }
 
     public static void gitRemove(String fileName) {
-        if (Stage.remove(fileName)) {
+        Stage stage = Stage.load();
+        if (stage.remove(fileName)) {
             return;
         }else {
             System.out.println("No reason to remove the file.");

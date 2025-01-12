@@ -67,7 +67,6 @@ public class Commit implements Serializable {
             return false;
         }
         for (Map.Entry<String, String> entry : stage.getAddStage().entrySet()) {
-            System.out.println("1");
             if (blobTreeMap.containsValue(entry.getValue())) { //如果包含暂存区相同文件，就删除
                 String objectKey = entry.getKey();
                 blobTreeMap.remove(objectKey);
