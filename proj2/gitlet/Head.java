@@ -7,7 +7,7 @@ import java.io.Serializable;
 import static gitlet.Repository.HEAD;
 
 public class Head implements Serializable {
-    public String id;
+    private String id;
     Head(String id) {
         this.id = id;
         save();

@@ -2,8 +2,6 @@ package gitlet;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import static gitlet.Utils.*;
 
@@ -38,7 +36,8 @@ public class Repository {
         } else {
             GITLET_DIR.mkdir();
             OBJECT_DIR.mkdir();
-            new Stage();
+            Stage stage = new Stage();
+            stage.save();
             BLOB_DIR.mkdir();
             COMMIT_DIR.mkdir();
             new Commit();
@@ -53,11 +52,16 @@ public class Repository {
         } //错误处理
         Blob blob =new Blob(fileName);
         Stage stage = Stage.load();
-        stage.addStage(blob.getFileName(), blob.getid());
+        stage.getAddStage().put(blob.getFileName(), blob.getid());
         stage.save();
     }
 
-    public static void gitcommit(String message) {
+    public static void gitCommit(String message) {
+        Stage stage1 = Stage.load();
+        System.out.println(stage1.getAddStage());
+        if (message == null) {
+            System.out.println("Please enter a commit message.");
+        }
         String parentID = Head.getCurHead();
         new Commit(parentID, message);
     }
@@ -76,6 +80,7 @@ public class Repository {
         StringBuilder builder = new StringBuilder();
         while (true) {
             builder.append(curCommit.getLog());
+            builder.append("\n");
             curCommitId = curCommit.getParentId(); //更新id
             if (curCommitId == null) {
                 break; //最后一个
@@ -118,15 +123,15 @@ public class Repository {
     public static void gitCheckout3(String fileName) {
         String lookedId = Head.getCurHead();
         Commit lookedCommit = Commit.load(lookedId);
-        TreeMap referenceMap = lookedCommit.getBlobTreeMap();
-        if (!referenceMap.containsKey(fileName)) {
-            System.out.println("File does not exist.");
-        }else {
-            String lookedHash = referenceMap.get(fileName).toString();
+        TreeMap<String, String> referenceMap = lookedCommit.getBlobTreeMap();
+        if (referenceMap.containsKey(fileName)) {
+            String lookedHash = referenceMap.get(fileName);
             File lookedFile = join(BLOB_DIR, lookedHash);
             byte[] lookedContents = readContents(lookedFile);
             File fileToCheckout = join(CWD, fileName);
             writeContents(fileToCheckout, (Object) lookedContents);
+        }else {
+            System.out.println("File does not exist.");
         }
     }
     /*从特定commit找文件*/
@@ -137,15 +142,15 @@ public class Repository {
             return;
         }
         Commit lookedCommit = Commit.load(commitId);
-        TreeMap referenceMap = lookedCommit.getBlobTreeMap();
-        if (!referenceMap.containsKey(fileName)) {
-            System.out.println("File does not exist.");
-        }else {
-            String lookedHash = referenceMap.get(fileName).toString();
+        TreeMap<String, String> referenceMap = lookedCommit.getBlobTreeMap();
+        if (referenceMap.containsKey(fileName)) {
+            String lookedHash = referenceMap.get(fileName);
             Blob lookedBlob = Blob.load(lookedHash);
             byte[] lookedContents = lookedBlob.getContents();
             File fileToCheckout = join(CWD, fileName);
             writeContents(fileToCheckout, (Object) lookedContents);
+        }else {
+            System.out.println("File does not exist.");
         }
     }
 

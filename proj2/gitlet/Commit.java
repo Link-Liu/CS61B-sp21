@@ -16,7 +16,7 @@ import static gitlet.Utils.*;
 public class Commit implements Serializable {
     private String parentId;
     private String parentId2;
-    private String timeStamp;
+    private Date timeStamp;
     private String message;
     private TreeMap<String, String> blobTreeMap; //键是名字，值是哈希
     private String id;
@@ -31,10 +31,10 @@ public class Commit implements Serializable {
     /*用于初始化*/
     public void commit() {
         this.parentId = null;
-        this.timeStamp = getTimeStamp();
+        this.timeStamp = new Date();
         this.message = "initial commit";
         this.blobTreeMap = new TreeMap<>();
-        getShaSet();
+        setShaSet();
         this.id = getSha1();
         new Head(getId());
         save();
@@ -43,17 +43,18 @@ public class Commit implements Serializable {
     /*日常commit*/
     public void commit(String idOfParent, String commitMessage) {
         this.parentId = idOfParent;
-        this.timeStamp = getTimeStamp();
+        this.timeStamp = new Date();
         this.message = commitMessage;
         this.blobTreeMap = new TreeMap<>();
-        getShaSet();
-        Head.setId(getId());
-        if (builbTreeMap()) {
+        if (buildTreeMap()) {
+            this.id = getSha1();
+            Head.setId(getId());
+            setShaSet();
             save();
         }
     }
     /*构建TreeMap*/
-    public boolean builbTreeMap() {
+    public boolean buildTreeMap() {
         Commit parientCommit;
         File parentFile = join(COMMIT_DIR, this.parentId);
         if (parentFile.exists()) { //复制所有内容
@@ -61,12 +62,13 @@ public class Commit implements Serializable {
             this.blobTreeMap.putAll(parientCommit.getBlobTreeMap());
         }
         Stage stage = Stage.load();
-        if (stage.getAddStage() == null) {
+        if (stage.getAddStage().isEmpty()) {
             System.out.println("No changes added to the commit.");
             return false;
         }
         for (Map.Entry<String, String> entry : stage.getAddStage().entrySet()) {
-            if (blobTreeMap.containsValue(entry.getValue())) { //如果包含暂存区的同名文件，就删除
+            System.out.println("1");
+            if (blobTreeMap.containsValue(entry.getValue())) { //如果包含暂存区相同文件，就删除
                 String objectKey = entry.getKey();
                 blobTreeMap.remove(objectKey);
             }
@@ -84,8 +86,7 @@ public class Commit implements Serializable {
             log.append("parent ").append(getParentId(), 0 ,7).append(" ");
             log.append(getParentId2()).append(System.lineSeparator());
         }
-        SimpleDateFormat f = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z");
-        log.append("Date: ").append(f.format(getTimeStamp())).append(System.lineSeparator());
+        log.append("Date: ").append(getTimeStamp()).append(System.lineSeparator());
         log.append(getMessage()).append(System.lineSeparator());
         return log.toString();
     }
@@ -98,18 +99,6 @@ public class Commit implements Serializable {
         File file = join(COMMIT_DIR, id);
         return readObject(file, Commit.class);
     }
-    /*获取当前时间*/
-    public String getTime() {
-        SimpleDateFormat ft = new SimpleDateFormat("HH:mm:ss zzz, E, d MMMM yyyy");
-        // 设置时区为UTC
-        ft.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (this.timeStamp == null) {
-            return ft.format(new Date());
-        } else {
-            Date d = new Date();
-            return ft.format(d);
-        }
-    }
     /*所有的返回方法*/
     public String getId() {
         return this.id;
@@ -118,10 +107,8 @@ public class Commit implements Serializable {
         return sha1(getShaSet().toArray());
     }
     public String getTimeStamp() {
-        if (this.timeStamp == null) {
-            this.timeStamp = getTime();
-        }
-        return this.timeStamp;
+        SimpleDateFormat ft = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        return ft.format(this.timeStamp);
     }
     public String getMessage() {
         return this.message;
@@ -142,8 +129,12 @@ public class Commit implements Serializable {
         return this.shaSet;
     }
     public void setShaSet() {
-        getShaSet().add(getParentId());
-        getShaSet().add(getParentId2());
+        if (getParentId() != null) {
+            getShaSet().add(getParentId());
+        }
+        if (getParentId2() != null) {
+            getShaSet().add(getParentId2());
+        }
         getShaSet().add(getTimeStamp());
         getShaSet().add(getMessage());
         getShaSet().add(getBlobTreeMap().toString());

@@ -18,6 +18,9 @@ public class Main {
             case "add":
                 Repository.gitAdd(args[1]);
                 break;
+            case "commit":
+                Repository.gitCommit(args[1]);
+                break;
             case "rm":
                 Repository.gitRemove(args[1]);
                 break;

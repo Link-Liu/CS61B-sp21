@@ -4,22 +4,25 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
 import static gitlet.Utils.readObject;
 import static gitlet.Repository.*;
 import static gitlet.Utils.writeObject;
 
 public class Stage implements Serializable {
-    private static TreeMap<String, String> addStage = new TreeMap<>();
-    private static HashSet<String> rmStages = new HashSet<>();
+    private static TreeMap<String, String> addStage;
+    private static TreeSet<String> rmStages;
 
     Stage() {
-        save();
+        addStage = new TreeMap<>();
+        rmStages = new TreeSet<>();
     }
 
     public static Stage load() {
-        Stage stage = readObject(STAGE_DIR, Stage.class);
-        return stage;
+        return readObject(STAGE_DIR, Stage.class);
     }
+
     public void clear() {
         addStage.clear();
         rmStages.clear();
@@ -29,8 +32,10 @@ public class Stage implements Serializable {
         writeObject(STAGE_DIR, this);
     }
 
-    static void addStage (String filename, String sha) {
-        addStage.put(filename, sha);
+    public void add (String filename, String sha) {
+        Stage stage = load();
+        stage.getAddStage().put(filename, sha);
+        save();
     }
 
     public TreeMap<String, String> getAddStage() {return addStage;}
