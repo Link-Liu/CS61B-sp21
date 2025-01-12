@@ -1,13 +1,9 @@
 # Gitlet Design Document
 
-**Name**: LIU Chenyu
+**Name**:
 
 ## Classes and Data Structures
-GITLET_DIR
-    OBJECT_DIR
-        BLOB_DIR
-        COMMIT_DIR
-    STAGE_DIR
+
 ### Class 1
 
 #### Fields

@@ -108,7 +108,7 @@ public class Repository {
                 builder.append(s).append("\n");
             }
         }
-        if (builder.isEmpty()) {
+        if (builder == null) {
             System.out.println("Found no commit with that message.");
         }else {
             System.out.println(builder.toString());

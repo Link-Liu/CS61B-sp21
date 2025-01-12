@@ -20,13 +20,6 @@ public class Stage implements Serializable {
     }
 
     public static Stage load() {
-        if (!STAGE_DIR.exists()) {
-            // If the stage file doesn't exist, create a new Stage and save it
-            Stage newStage = new Stage();
-            newStage.save();
-            return newStage;
-        }
-        // Otherwise read the existing stage data
         return readObject(STAGE_DIR, Stage.class);
     }
 
@@ -38,12 +31,6 @@ public class Stage implements Serializable {
 
     public void save() {
         writeObject(STAGE_DIR, this);
-    }
-
-    public void add (String filename, String sha) {
-        Stage stage = load();
-        stage.getAddStage().put(filename, sha);
-        save();
     }
 
     public TreeMap<String, String> getAddStage() {return addStage;}

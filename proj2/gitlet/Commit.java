@@ -47,9 +47,9 @@ public class Commit implements Serializable {
         this.message = commitMessage;
         this.blobTreeMap = new TreeMap<>();
         if (buildTreeMap()) {
+            setShaSet();
             this.id = getSha1();
             Head.setId(getId());
-            setShaSet();
             save();
         }
     }
