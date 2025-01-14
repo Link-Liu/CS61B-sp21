@@ -25,7 +25,8 @@ public class ModificationChecker {
                 continue;
             }
             File cwdFile = Utils.join(CWD, fileName);
-            byte[] blobContent = Blob.load(Commit.getCurrentCommit().getBlobTreeMap().get(fileName)).getContents();
+            String blobHash =Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
+            byte[] blobContent = Blob.load(blobHash).getContents();
             if (!blobContent.equals(Utils.readContents(cwdFile))) {
                 modefiedFileNames.add(fileName);
             }

@@ -60,7 +60,7 @@ public class Stage implements Serializable {
         Set<String> addStages = stage.getAddStage().keySet();
         Set<String> removeStages = stage.getRmStages();
         StringBuilder sb = new StringBuilder();
-        sb.append("=== Staged Files ===");
+        sb.append("=== Staged Files ===").append(System.lineSeparator());
         for (String filename : addStages) {
             sb.append(filename).append(System.lineSeparator());
         }

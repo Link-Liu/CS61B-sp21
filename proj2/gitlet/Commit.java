@@ -67,19 +67,27 @@ public class Commit implements Serializable {
             System.out.println("No changes added to the commit.");
             return false;
         }
-        Iterator<Map.Entry<String, String>> iterator = stage.getAddStage().entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-            if (blobTreeMap.containsValue(entry.getValue())) { //如果包含暂存区相同文件，就删除
-                String objectKey = entry.getKey();
-                blobTreeMap.remove(objectKey);
+        // 创建临时集合用于添加和移除
+        Map<String, String> additions = new HashMap<>(stage.getAddStage());
+        Set<String> keysToRemove = new HashSet<>();
+
+        // 遍历并确定要移除的键
+        for (Map.Entry<String, String> entry : additions.entrySet()) {
+            // 如果 blobTreeMap 包含相同内容的文件，则记录其键以备移除
+            if (blobTreeMap.containsValue(entry.getValue())) {
+                keysToRemove.add(entry.getKey());
             }
-            blobTreeMap.putAll(stage.getAddStage());
-            for (String fileToRemove : stage.getRmStages()) {
-                File file = join(CWD, fileToRemove);
-                if (file.exists()) {
+        }
+        // 批量移除已确定的键
+        for (String key : keysToRemove) {
+            blobTreeMap.remove(key);
+        }
+        // 批量添加新的条目
+        blobTreeMap.putAll(additions);
+        for (String fileToRemove : stage.getRmStages()) {
+            File file = join(CWD, fileToRemove);
+            if (file.exists()) {
                     restrictedDelete(file);
-                }
             }
             stage.clear();
             stage.save();

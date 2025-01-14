@@ -33,7 +33,9 @@ public class Repository {
 
     public static void gitInit() {
         if (GITLET_DIR.exists()) {
-            System.out.println("A Gitlet version-control system already exists in the current directory.");
+            String msg;
+            msg =  "A Gitlet version-control system already exists in the current directory.";
+            System.out.println(msg);
         } else {
             GITLET_DIR.mkdir();
             OBJECT_DIR.mkdir();
@@ -207,7 +209,8 @@ public class Repository {
 
     public static void setBranch(String commitHash) {
         if (!Commit.getUntrackedFileName().isEmpty()) {
-            System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+            String massage = "There is an untracked file in the way; ";
+            System.out.println(massage + "delete it, or add and commit it first.");
             return;
         }
         List<String> cwdFileNames = Utils.plainFilenamesIn(CWD);
