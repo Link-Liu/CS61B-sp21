@@ -2,9 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import static gitlet.Utils.readObject;
 import static gitlet.Repository.*;
@@ -33,7 +31,13 @@ public class Stage implements Serializable {
         writeObject(STAGE_DIR, this);
     }
 
-    public TreeMap<String, String> getAddStage() {return addStage;}
+    public TreeMap<String, String> getAddStage() {
+        return addStage;
+    }
+
+    public TreeSet<String> getRmStages() {
+        return rmStages;
+    }
 
     public boolean remove(String filename) {
         if (!getAddStage().containsKey(filename)) {
@@ -46,9 +50,28 @@ public class Stage implements Serializable {
                 return true;
             }
         }else {
-            addStage.remove(filename);
+            getAddStage().remove(filename);
             return true;
         }
+    }
+
+    public static String printStages() {
+        Stage stage = Stage.load();
+        Set<String> addStages = stage.getAddStage().keySet();
+        Set<String> removeStages = stage.getRmStages();
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Staged Files ===");
+        for (String filename : addStages) {
+            sb.append(filename).append(System.lineSeparator());
+        }
+        sb.append(System.lineSeparator());
+        sb.append("=== Removed Files ===");
+        for (String filename : removeStages) {
+            sb.append(filename).append(System.lineSeparator());
+        }
+        sb.append(System.lineSeparator());
+        sb.append(System.lineSeparator());
+        return sb.toString();
     }
 
 }

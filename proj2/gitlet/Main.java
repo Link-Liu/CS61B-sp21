@@ -40,6 +40,8 @@ public class Main {
                 int cmdLength = args.length;
                 switch (cmdLength) {
                     case 2:
+                        Repository.gitCheckout2(args[1]);
+                        break;
                     case 3:
                         Repository.gitCheckout3(args[2]);
                         break;
@@ -47,7 +49,16 @@ public class Main {
                         Repository.gitCheckout4(args[1], args[3]);
                         break;
                 }
-
+                break;
+            case "branch":
+                Repository.gitBranch(args[1]);
+                break;
+            case "rm-branch":
+                Repository.rmBranch(args[1]);
+                break;
+            case "reset":
+                Repository.reset(args[1]);
+                break;
         }
     }
 }

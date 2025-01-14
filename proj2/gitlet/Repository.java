@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import static gitlet.Utils.*;
 
@@ -50,6 +51,22 @@ public class Repository {
             System.out.println("File does not exist.");
             return;
         } //错误处理
+        TreeMap<String, String> curBlobMap = Commit.getCurrentCommit().getBlobTreeMap();
+        if (curBlobMap.containsKey(fileName)) {
+            Blob lookedBlob = Blob.load(curBlobMap.get(fileName));
+            byte[] lookedContents = lookedBlob.getContents();
+            File curFile = join(CWD, fileName);
+            byte[] curContents = readContents(curFile);
+            if (lookedContents.equals(curContents)) {
+                Stage stage = Stage.load();
+                TreeMap<String, String> adddtion = stage.getAddStage();
+                if (adddtion.containsKey(fileName)) {
+                    adddtion.remove(fileName);
+                    stage.save();
+                }
+                return;
+            }
+        }
         Blob blob =new Blob(fileName);
         Stage stage = Stage.load();
         stage.getAddStage().put(blob.getFileName(), blob.getid());
@@ -116,6 +133,30 @@ public class Repository {
     }
 
     public static void gitStatus(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(Head.printBranch());
+        builder.append(Stage.printStages());
+        builder.append(ModificationChecker.printCwdfiles());
+        builder.append("=== Untracked Files ===");
+        List<String> untrackedFiles = Commit.getUntrackedFileName();
+        for (String s: untrackedFiles) {
+            builder.append(s).append(System.lineSeparator());
+            builder.append(System.lineSeparator());
+        }
+        System.out.println(builder.toString());
+    }
+
+    public static void gitCheckout2(String branchName) { //branchName是一个哈希值
+        if (!Head.getBranch().containsKey(branchName)) {
+            System.out.println("No such branch exists.");
+            return;
+        }
+        if (Head.getCurHead().equals(branchName)) {
+            System.out.println("No need to checkout the current branch.");
+        }
+        String hash = Head.getBranch().get(branchName);
+        setBranch(hash);
+        Head.checkoutBranch(branchName);
 
     }
     /*从head找文件*/
@@ -140,6 +181,48 @@ public class Repository {
             writeContents(fileToCheckout, (Object) lookedContents);
         }else {
             System.out.println("File does not exist.");
+        }
+    }
+
+    public static void gitBranch(String branchName) {
+        Head.createBranch(branchName);
+    }
+
+    public static void rmBranch(String branchName) {
+        Head.removeBranch(branchName);
+    }
+
+    public static void reset(String commitId) {
+        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
+        if (!log.contains(commitId)) {
+            System.out.println("No commit with that id exists.");
+        }else {
+            setBranch(commitId);
+            Stage stage = Stage.load();
+            stage.clear();
+            stage.save();
+            Head.setId(commitId);
+        }
+    }
+
+    public static void setBranch(String commitHash) {
+        if (!Commit.getUntrackedFileName().isEmpty()) {
+            System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+            return;
+        }
+        List<String> cwdFileNames = Utils.plainFilenamesIn(CWD);
+        Commit branchCommit = Commit.load(commitHash);
+        TreeMap<String, String> blobMap = branchCommit.getBlobTreeMap();
+        for (String fileName: cwdFileNames) {
+            if (!blobMap.containsKey(fileName)) {
+                restrictedDelete(join(CWD, fileName));
+            }
+        }
+        for (Map.Entry<String, String> entry : blobMap.entrySet()) {
+            String name = entry.getKey();
+            String hash = entry.getValue();
+            byte[] blobContents = Blob.load(hash).getContents();
+            writeContents(join(CWD, name), blobContents);
         }
     }
 

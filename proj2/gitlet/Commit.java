@@ -8,6 +8,7 @@ import java.util.*;
 
 import gitlet.Repository.*;
 import static gitlet.Repository.COMMIT_DIR;
+import static gitlet.Repository.CWD;
 import static gitlet.Utils.*;
 
 /** 完成与commit有关的事情
@@ -72,6 +73,12 @@ public class Commit implements Serializable {
                 blobTreeMap.remove(objectKey);
             }
             blobTreeMap.putAll(stage.getAddStage());
+            for(String fileToRemove : stage.getRmStages()) {
+                File file = join(CWD, fileToRemove);
+                if (file.exists()) {
+                    restrictedDelete(file);
+                }
+            }
             stage.clear();
             stage.save();
         }
@@ -96,9 +103,27 @@ public class Commit implements Serializable {
     /*加载文件*/
     public static Commit load(String id) {
         File file = join(COMMIT_DIR, id);
-        return readObject(file, Commit.class);
+        Commit commit = readObject(file, Commit.class);
+        return commit;
     }
     /*所有的返回方法*/
+    public static List<String> getUntrackedFileName() {
+        List<String> cwdFileName = plainFilenamesIn(CWD);
+        List<String> untrackedFileName = new ArrayList<>();
+        Set<String> trackedFileName = getCurrentCommit().getBlobTreeMap().keySet();
+        for (String fileName : cwdFileName) {
+            if (!trackedFileName.contains(fileName)) {
+                untrackedFileName.add(fileName);
+            }
+        }
+        return untrackedFileName;
+    }
+
+
+    public static Commit getCurrentCommit() {
+        String hash = Head.getCurHead();
+        return load(hash);
+    }
     public String getId() {
         return this.id;
     }
