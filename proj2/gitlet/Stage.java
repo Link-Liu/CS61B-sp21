@@ -44,12 +44,12 @@ public class Stage implements Serializable {
             Commit curCommit = Commit.load(Head.getCurHead());
             if (!curCommit.getBlobTreeMap().containsKey(filename)) {
                 return false;
-            }else {
+            } else {
                 curCommit.getBlobTreeMap().remove(filename);
                 rmStages.add(filename);
                 return true;
             }
-        }else {
+        } else {
             getAddStage().remove(filename);
             return true;
         }
@@ -63,6 +63,9 @@ public class Stage implements Serializable {
         sb.append("=== Staged Files ===");
         for (String filename : addStages) {
             sb.append(filename).append(System.lineSeparator());
+        }
+        if (addStages.isEmpty()) {
+            sb.append(System.lineSeparator());
         }
         sb.append(System.lineSeparator());
         sb.append("=== Removed Files ===");

@@ -67,14 +67,14 @@ public class Repository {
                 return;
             }
         }
-        Blob blob =new Blob(fileName);
+        Blob blob = new Blob(fileName);
         Stage stage = Stage.load();
         stage.getAddStage().put(blob.getFileName(), blob.getid());
         stage.save();
     }
 
     public static void gitCommit(String message) {
-        if (message == null) {
+        if (message == null || message.isEmpty()) {
             System.out.println("Please enter a commit message.");
         }
         String parentID = Head.getCurHead();
@@ -85,7 +85,7 @@ public class Repository {
         Stage stage = Stage.load();
         if (stage.remove(fileName)) {
             return;
-        }else {
+        } else {
             System.out.println("No reason to remove the file.");
         }
     }
@@ -127,12 +127,12 @@ public class Repository {
         }
         if (builder == null) {
             System.out.println("Found no commit with that message.");
-        }else {
+        } else {
             System.out.println(builder.toString());
         }
     }
 
-    public static void gitStatus(){
+    public static void gitStatus() {
         StringBuilder builder = new StringBuilder();
         builder.append(Head.printBranch());
         builder.append(Stage.printStages());
@@ -179,7 +179,7 @@ public class Repository {
             byte[] lookedContents = lookedBlob.getContents();
             File fileToCheckout = join(CWD, fileName);
             writeContents(fileToCheckout, (Object) lookedContents);
-        }else {
+        } else {
             System.out.println("File does not exist.");
         }
     }
@@ -196,7 +196,7 @@ public class Repository {
         List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
         if (!log.contains(commitId)) {
             System.out.println("No commit with that id exists.");
-        }else {
+        } else {
             setBranch(commitId);
             Stage stage = Stage.load();
             stage.clear();

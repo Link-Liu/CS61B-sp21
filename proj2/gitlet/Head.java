@@ -70,16 +70,15 @@ public class Head implements Serializable {
     public static String printBranch() {
         Head head = Utils.readObject(HEAD, Head.class);
         StringBuilder sb = new StringBuilder();
-        sb.append("=== Branches ===");
+        sb.append("=== Branches ===").append(System.lineSeparator());
         for (String branchName : getBranch().keySet()) {
             if (branchName.equals(head.getCurBranch())) {
                 sb.append("*" + branchName);
-            }else {
+            } else {
                 sb.append(branchName);
             }
             sb.append(System.lineSeparator());
         }
-        sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
         return sb.toString();
     }

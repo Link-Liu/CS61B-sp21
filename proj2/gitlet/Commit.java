@@ -67,13 +67,15 @@ public class Commit implements Serializable {
             System.out.println("No changes added to the commit.");
             return false;
         }
-        for (Map.Entry<String, String> entry : stage.getAddStage().entrySet()) {
+        Iterator<Map.Entry<String, String>> iterator = stage.getAddStage().entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
             if (blobTreeMap.containsValue(entry.getValue())) { //如果包含暂存区相同文件，就删除
                 String objectKey = entry.getKey();
                 blobTreeMap.remove(objectKey);
             }
             blobTreeMap.putAll(stage.getAddStage());
-            for(String fileToRemove : stage.getRmStages()) {
+            for (String fileToRemove : stage.getRmStages()) {
                 File file = join(CWD, fileToRemove);
                 if (file.exists()) {
                     restrictedDelete(file);
@@ -89,7 +91,7 @@ public class Commit implements Serializable {
         log.append("===").append(System.lineSeparator());
         log.append("commit ").append(getId()).append(System.lineSeparator());
         if (have2Parent()) {
-            log.append("parent ").append(getParentId(), 0 ,7).append(" ");
+            log.append("parent ").append(getParentId(), 0, 7).append(" ");
             log.append(getParentId2()).append(System.lineSeparator());
         }
         log.append("Date: ").append(getTimeStamp()).append(System.lineSeparator());
