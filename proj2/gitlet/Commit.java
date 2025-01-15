@@ -100,7 +100,7 @@ public class Commit implements Serializable {
         log.append("commit ").append(getId()).append(System.lineSeparator());
         if (have2Parent()) {
             log.append("parent ").append(getParentId(), 0, 7).append(" ");
-            log.append(getParentId2()).append(System.lineSeparator());
+            log.append(getParentId2(), 0, 7).append(System.lineSeparator());
         }
         log.append("Date: ").append(getTimeStamp()).append(System.lineSeparator());
         log.append(getMessage()).append(System.lineSeparator());

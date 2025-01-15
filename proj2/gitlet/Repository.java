@@ -112,9 +112,9 @@ public class Repository {
         List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
-            builder.append(s).append("\n");
+            Commit curCommit = Commit.load(s);
+            builder.append(curCommit.getLog()).append("\n");
         }
-        builder.deleteCharAt(builder.length() - 1);
         System.out.println(builder.toString());
     }
 
@@ -144,9 +144,6 @@ public class Repository {
         List<String> untrackedFiles = Commit.getUntrackedFileName();
         for (String s: untrackedFiles) {
             builder.append(s);
-            builder.append(System.lineSeparator());
-        }
-        if (untrackedFiles.isEmpty()) {
             builder.append(System.lineSeparator());
         }
         System.out.println(builder.toString());
