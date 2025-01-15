@@ -99,7 +99,6 @@ public class Repository {
         StringBuilder builder = new StringBuilder();
         while (true) {
             builder.append(curCommit.getLog());
-            builder.append("\n");
             curCommitId = curCommit.getParentId(); //更新id
             if (curCommitId == null) {
                 break; //最后一个
@@ -114,7 +113,7 @@ public class Repository {
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
             Commit curCommit = Commit.load(s);
-            builder.append(curCommit.getLog()).append("\n");
+            builder.append(curCommit.getLog());
         }
         System.out.println(builder.toString());
     }

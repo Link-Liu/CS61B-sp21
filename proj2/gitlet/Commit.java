@@ -96,14 +96,14 @@ public class Commit implements Serializable {
     }
     public String getLog() {
         StringBuilder log = new StringBuilder();
-        log.append("===").append(System.lineSeparator());
-        log.append("commit ").append(getId()).append(System.lineSeparator());
+        log.append("===\n");
+        log.append("commit ").append(getId()).append("\n");
         if (have2Parent()) {
-            log.append("parent ").append(getParentId(), 0, 7).append(" ");
-            log.append(getParentId2(), 0, 7).append(System.lineSeparator());
+            log.append("Merge: ").append(getParentId(), 0, 7).append(" ");
+            log.append(getParentId2(), 0, 7).append("\n");
         }
-        log.append("Date: ").append(getTimeStamp()).append(System.lineSeparator());
-        log.append(getMessage()).append(System.lineSeparator());
+        log.append("Date: ").append(getTimeStamp()).append("\n");
+        log.append(getMessage()).append("\n\n");
         return log.toString();
     }
     /*以哈希值储存文件*/

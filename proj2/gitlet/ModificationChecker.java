@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +28,7 @@ public class ModificationChecker {
             File cwdFile = Utils.join(CWD, fileName);
             String blobHash = Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
             byte[] blobContent = Blob.load(blobHash).getContents();
-            boolean modified = !blobContent.equals(Utils.readContents(cwdFile));
+            boolean modified = !Arrays.equals(blobContent, Utils.readContents(cwdFile));
             boolean added = !Stage.load().getAddStage().containsKey(fileName);
             if (modified && added) {
                 modefiedFileNames.add(fileName);

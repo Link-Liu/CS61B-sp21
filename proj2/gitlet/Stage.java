@@ -23,8 +23,8 @@ public class Stage implements Serializable {
 
 
     public void clear() {
-        addStage.clear();
-        rmStages.clear();
+        getAddStage().clear();
+        getRmStages().clear();
     }
 
     public void save() {
