@@ -139,12 +139,16 @@ public class Repository {
         builder.append(Head.printBranch());
         builder.append(Stage.printStages());
         builder.append(ModificationChecker.printCwdfiles());
-        builder.append("=== Untracked Files ===");
+        builder.append("=== Untracked Files ===").append(System.lineSeparator());
         List<String> untrackedFiles = Commit.getUntrackedFileName();
         for (String s: untrackedFiles) {
-            builder.append(s).append(System.lineSeparator());
+            builder.append(s);
             builder.append(System.lineSeparator());
         }
+        if (untrackedFiles.isEmpty()) {
+            builder.append(System.lineSeparator());
+        }
+        builder.append(System.lineSeparator());
         System.out.println(builder.toString());
     }
 
