@@ -53,6 +53,7 @@ public class ModificationChecker {
             sb.append(fileName).append(" (modefied)").append(System.lineSeparator());
         }
         sb.append(System.lineSeparator());
+        sb.append(System.lineSeparator());
         return sb.toString();
     }
 }

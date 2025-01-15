@@ -22,30 +22,30 @@ public class Head implements Serializable {
     public static void setId(String id) {
         Head head = Utils.readObject(HEAD, Head.class);
         head.id = id;
-        head.getBranch().put(head.getCurBranch(), id);
+        getBranch().put(head.getCurBranch(), id);
         save(head);
     }
 
     public static void checkoutBranch(String branchToCheckout) {
         Head head = Utils.readObject(HEAD, Head.class);
         head.curBranch = branchToCheckout;
-        setId(head.getBranch().get(branchToCheckout));
+        setId(getBranch().get(branchToCheckout));
         save(head);
     }
 
     public static void createBranch(String branchToCreate) {
         Head head = Utils.readObject(HEAD, Head.class);
-        if (head.getBranch().containsKey(branchToCreate)) {
+        if (getBranch().containsKey(branchToCreate)) {
             System.out.println("A branch with that name already exists.");
             return;
         }
-        head.getBranch().put(branchToCreate, getCurHead());
+        getBranch().put(branchToCreate, getCurHead());
         save(head);
     }
 
     public static void removeBranch(String branchToRemove) {
         Head head = Utils.readObject(HEAD, Head.class);
-        head.getBranch().remove(branchToRemove);
+        getBranch().remove(branchToRemove);
         save(head);
     }
 
@@ -58,8 +58,9 @@ public class Head implements Serializable {
         return head.id;
     }
 
-    public  TreeMap<String, String> getBranch() {
-        return branch;
+    public static TreeMap<String, String> getBranch() {
+        Head head = Utils.readObject(HEAD, Head.class);
+        return head.branch;
     }
 
     public String getCurBranch() {
@@ -70,7 +71,7 @@ public class Head implements Serializable {
         Head head = Utils.readObject(HEAD, Head.class);
         StringBuilder sb = new StringBuilder();
         sb.append("=== Branches ===").append(System.lineSeparator());
-        for (String branchName : head.getBranch().keySet()) {
+        for (String branchName : getBranch().keySet()) {
             if (branchName.equals(head.getCurBranch())) {
                 sb.append("*" + branchName);
             } else {
