@@ -126,6 +126,11 @@ public class Commit implements Serializable {
                 untrackedFileName.add(fileName);
             }
         }
+        for (String fileName : Stage.load().getAddStage().keySet()) {
+            if (!untrackedFileName.contains(fileName)) {
+                untrackedFileName.remove(fileName);
+            }
+        }
         return untrackedFileName;
     }
 

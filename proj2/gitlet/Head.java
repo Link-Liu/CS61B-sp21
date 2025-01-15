@@ -80,6 +80,7 @@ public class Head implements Serializable {
             sb.append(System.lineSeparator());
         }
         sb.append(System.lineSeparator());
+        sb.append("=== Heads ===").append(System.lineSeparator());
         return sb.toString();
     }
 

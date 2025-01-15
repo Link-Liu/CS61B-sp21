@@ -73,6 +73,9 @@ public class Stage implements Serializable {
         for (String filename : removeStages) {
             sb.append(filename).append(System.lineSeparator());
         }
+        if (removeStages.isEmpty()) {
+            sb.append(System.lineSeparator());
+        }
         sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
         return sb.toString();

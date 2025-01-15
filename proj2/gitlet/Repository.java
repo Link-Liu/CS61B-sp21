@@ -114,6 +114,7 @@ public class Repository {
         for (String s: log) {
             builder.append(s).append("\n");
         }
+        builder.deleteCharAt(builder.length() - 1);
         System.out.println(builder.toString());
     }
 
@@ -127,7 +128,7 @@ public class Repository {
                 builder.append(s).append("\n");
             }
         }
-        if (builder == null) {
+        if (builder.length() == 0) {
             System.out.println("Found no commit with that message.");
         } else {
             System.out.println(builder.toString());
