@@ -68,7 +68,6 @@ public class Stage implements Serializable {
             sb.append(System.lineSeparator());
         }
         sb.append(System.lineSeparator());
-        sb.append(System.lineSeparator());
         sb.append("=== Removed Files ===");
         for (String filename : removeStages) {
             sb.append(filename).append(System.lineSeparator());

@@ -149,7 +149,6 @@ public class Repository {
         if (untrackedFiles.isEmpty()) {
             builder.append(System.lineSeparator());
         }
-        builder.append(System.lineSeparator());
         System.out.println(builder.toString());
     }
 

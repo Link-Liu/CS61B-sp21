@@ -87,7 +87,7 @@ public class Commit implements Serializable {
         for (String fileToRemove : stage.getRmStages()) {
             File file = join(CWD, fileToRemove);
             if (file.exists()) {
-                    restrictedDelete(file);
+                restrictedDelete(file);
             }
             stage.clear();
             stage.save();

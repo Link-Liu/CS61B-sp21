@@ -25,9 +25,11 @@ public class ModificationChecker {
                 continue;
             }
             File cwdFile = Utils.join(CWD, fileName);
-            String blobHash =Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
+            String blobHash = Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
             byte[] blobContent = Blob.load(blobHash).getContents();
-            if (!blobContent.equals(Utils.readContents(cwdFile))) {
+            boolean modified = !blobContent.equals(Utils.readContents(cwdFile));
+            boolean added = !Stage.load().getAddStage().containsKey(fileName);
+            if (modified && added) {
                 modefiedFileNames.add(fileName);
             }
         }
@@ -43,6 +45,7 @@ public class ModificationChecker {
         checker.check();
         StringBuilder sb = new StringBuilder();
         sb.append("=== Modifications Not Staged For Commit ===");
+        sb.append(System.lineSeparator());
         for (String fileName : checker.getDeletedFileNames()) {
             sb.append(fileName).append(" (deleted)").append(System.lineSeparator());
         }
