@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -59,7 +60,7 @@ public class Repository {
             byte[] lookedContents = lookedBlob.getContents();
             File curFile = join(CWD, fileName);
             byte[] curContents = readContents(curFile);
-            if (lookedContents.equals(curContents)) {
+            if (Arrays.equals(lookedContents, curContents)) {
                 Stage stage = Stage.load();
                 TreeMap<String, String> adddtion = stage.getAddStage();
                 if (adddtion.containsKey(fileName)) {
@@ -115,7 +116,6 @@ public class Repository {
             Commit curCommit = Commit.load(s);
             builder.append(curCommit.getLog()).append("\n");
         }
-        builder.deleteCharAt(builder.length() - 1);
         System.out.println(builder.toString());
     }
 
