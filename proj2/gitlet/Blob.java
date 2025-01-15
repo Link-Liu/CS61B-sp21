@@ -1,7 +1,6 @@
 package gitlet;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import static gitlet.Repository.BLOB_DIR;
 import static gitlet.Repository.CWD;

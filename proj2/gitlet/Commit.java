@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import gitlet.Repository.*;
 import static gitlet.Repository.COMMIT_DIR;
 import static gitlet.Repository.CWD;
 import static gitlet.Utils.*;
@@ -89,9 +87,9 @@ public class Commit implements Serializable {
             if (file.exists()) {
                 restrictedDelete(file);
             }
-            stage.clear();
-            stage.save();
         }
+        stage.clear();
+        stage.save();
         return true;
     }
     public String getLog() {
