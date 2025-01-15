@@ -115,6 +115,7 @@ public class Repository {
             Commit curCommit = Commit.load(s);
             builder.append(curCommit.getLog()).append("\n");
         }
+        builder.deleteCharAt(builder.length() - 1);
         System.out.println(builder.toString());
     }
 
@@ -229,6 +230,13 @@ public class Repository {
             String hash = entry.getValue();
             byte[] blobContents = Blob.load(hash).getContents();
             writeContents(join(CWD, name), blobContents);
+        }
+    }
+
+    public static void checkInit() {
+        if (!(GITLET_DIR.exists() && GITLET_DIR.isDirectory())) {
+            System.out.println("Not in an initialized Gitlet directory.");
+            System.exit(0);
         }
     }
 

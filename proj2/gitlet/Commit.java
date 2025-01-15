@@ -121,14 +121,10 @@ public class Commit implements Serializable {
         List<String> cwdFileName = plainFilenamesIn(CWD);
         List<String> untrackedFileName = new ArrayList<>();
         Set<String> trackedFileName = getCurrentCommit().getBlobTreeMap().keySet();
+        Set<String> addedFileName = Stage.load().getAddStage().keySet();
         for (String fileName : cwdFileName) {
-            if (!trackedFileName.contains(fileName)) {
+            if (!trackedFileName.contains(fileName) && !addedFileName.contains(fileName)) {
                 untrackedFileName.add(fileName);
-            }
-        }
-        for (String fileName : Stage.load().getAddStage().keySet()) {
-            if (!untrackedFileName.contains(fileName)) {
-                untrackedFileName.remove(fileName);
             }
         }
         return untrackedFileName;
