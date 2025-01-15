@@ -128,6 +128,7 @@ public class Repository {
                 builder.append(s).append("\n");
             }
         }
+        builder.deleteCharAt(builder.length() - 1);
         if (builder.length() == 0) {
             System.out.println("Found no commit with that message.");
         } else {
@@ -150,14 +151,15 @@ public class Repository {
     }
 
     public static void gitCheckout2(String branchName) { //branchName是一个哈希值
-        if (!Head.getBranch().containsKey(branchName)) {
+        TreeMap<String, String> branchs = readObject(HEAD, Head.class).getBranch();
+        if (!branchs.containsKey(branchName)) {
             System.out.println("No such branch exists.");
             return;
         }
         if (Head.getCurHead().equals(branchName)) {
             System.out.println("No need to checkout the current branch.");
         }
-        String hash = Head.getBranch().get(branchName);
+        String hash = branchs.get(branchName);
         setBranch(hash);
         Head.checkoutBranch(branchName);
 
