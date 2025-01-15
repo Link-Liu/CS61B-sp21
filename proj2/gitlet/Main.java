@@ -1,7 +1,5 @@
 package gitlet;
 
-import com.sun.org.apache.bcel.internal.util.Args;
-
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
  */
@@ -98,9 +96,5 @@ public class Main {
             System.out.println("Incorrect operands.");
             System.exit(0);
         }
-    }
-
-    public static void checkinit() {
-
     }
 }
