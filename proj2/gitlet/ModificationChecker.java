@@ -24,6 +24,7 @@ public class ModificationChecker {
             if (!Stage.load().getRmStages().contains(fileName)) {
                 if (!cwdFileNames.contains(fileName)) {
                     deletedFileNames.add(fileName);
+                    continue;
                 }
                 File cwdFile = Utils.join(CWD, fileName);
                 String blobHash = Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
