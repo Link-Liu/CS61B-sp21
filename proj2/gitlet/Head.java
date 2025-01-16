@@ -43,6 +43,14 @@ public class Head implements Serializable {
 
     public static void removeBranch(String branchToRemove) {
         Head head = Utils.readObject(HEAD, Head.class);
+        if (head.getCurBranch().equals(branchToRemove)) {
+            System.out.println("Cannot remove the current branch.");
+            return;
+        }
+        if (!head.getBranch().containsKey(branchToRemove)) {
+            System.out.println("A branch with that name does not exist.");
+            return;
+        }
         head.getBranch().remove(branchToRemove);
         save(head);
     }

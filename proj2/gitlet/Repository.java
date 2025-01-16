@@ -115,9 +115,8 @@ public class Repository {
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
             Commit curCommit = Commit.load(s);
-            builder.append(curCommit.getLog());
+            curCommit.printCommit();
         }
-        System.out.println(builder.toString());
     }
 
     public static void gitFind(String massage) {

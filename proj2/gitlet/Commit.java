@@ -172,4 +172,45 @@ public class Commit implements Serializable {
         getShaSet().add(getMessage());
         getShaSet().add(getBlobTreeMap().toString());
     }
+    public void printCommit() {
+        if (have2Parent()) {
+            printMergeCommit(this);
+        } else {
+            printCommit(this);
+        }
+    }
+
+    private static void printCommit(Commit currCommmit) {
+        System.out.println("===");
+        printCommitID(currCommmit);
+        printCommitDate(currCommmit);
+        printCommitMessage(currCommmit);
+    }
+
+    private static void printMergeCommit(Commit currCommmit) {
+        System.out.println("===");
+        printCommitID(currCommmit);
+        printMergeMark(currCommmit);
+        printCommitDate(currCommmit);
+        printCommitMessage(currCommmit);
+    }
+
+    private static void printCommitID(Commit currCommmit) {
+        System.out.println("commit " + currCommmit.getId());
+    }
+
+    private static void printMergeMark(Commit currCommmit) {
+        String parent1 = currCommmit.getParentId();
+        String parent2 = currCommmit.getParentId2();
+        System.out.println("Merge: " + parent1.substring(0, 7) + " " + parent2.substring(0, 7));
+    }
+
+    private static void printCommitDate(Commit currCommmit) {
+        System.out.println("Date: " + currCommmit.getTimeStamp());
+    }
+
+    private static void printCommitMessage(Commit currCommmit) {
+        System.out.println(currCommmit.getMessage() + "\n");
+    }
+
 }
