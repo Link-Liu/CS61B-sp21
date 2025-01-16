@@ -21,18 +21,18 @@ public class ModificationChecker {
         List<String> cwdFileNames = Utils.plainFilenamesIn(CWD);
         Set<String> trackedFileNames = Commit.getCurrentCommit().getBlobTreeMap().keySet();
         for (String fileName : trackedFileNames) {
-            boolean deleted = !cwdFileNames.contains(fileName);
-            if (deleted && !Stage.load().getRmStages().contains(fileName)) {
-                deletedFileNames.add(fileName);
-                continue;
-            }
-            File cwdFile = Utils.join(CWD, fileName);
-            String blobHash = Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
-            byte[] blobContent = Blob.load(blobHash).getContents();
-            boolean modified = !Arrays.equals(blobContent, Utils.readContents(cwdFile));
-            boolean added = !Stage.load().getAddStage().containsKey(fileName);
-            if (modified && added) {
-                modefiedFileNames.add(fileName);
+            if (!Stage.load().getRmStages().contains(fileName)) {
+                if (!cwdFileNames.contains(fileName)) {
+                    deletedFileNames.add(fileName);
+                }
+                File cwdFile = Utils.join(CWD, fileName);
+                String blobHash = Commit.getCurrentCommit().getBlobTreeMap().get(fileName);
+                byte[] blobContent = Blob.load(blobHash).getContents();
+                boolean modified = !Arrays.equals(blobContent, Utils.readContents(cwdFile));
+                boolean added = !Stage.load().getAddStage().containsKey(fileName);
+                if (modified && added) {
+                    modefiedFileNames.add(fileName);
+                }
             }
         }
     }
