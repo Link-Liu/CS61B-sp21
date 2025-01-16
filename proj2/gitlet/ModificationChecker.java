@@ -21,7 +21,7 @@ public class ModificationChecker {
         List<String> cwdFileNames = Utils.plainFilenamesIn(CWD);
         Set<String> trackedFileNames = Commit.getCurrentCommit().getBlobTreeMap().keySet();
         for (String fileName : trackedFileNames) {
-            if (!Stage.load().getRmStages().contains(fileName)) {
+            if (!Stage.load().getRmStages().containsKey(fileName)) {
                 if (!cwdFileNames.contains(fileName)) {
                     deletedFileNames.add(fileName);
                     continue;

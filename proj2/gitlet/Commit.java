@@ -84,7 +84,7 @@ public class Commit implements Serializable {
         }
         // 批量添加新的条目
         blobTreeMap.putAll(additions);
-        for (String fileToRemove : stage.getRmStages()) {
+        for (String fileToRemove : stage.getRmStages().keySet()) {
             File file = join(CWD, fileToRemove);
             if (file.exists()) {
                 restrictedDelete(file);
