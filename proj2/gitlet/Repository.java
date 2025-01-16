@@ -80,6 +80,11 @@ public class Repository {
             if (sha1(curContents).equals(stage.getRmStages().get(fileName))) {
                 stage.getRmStages().remove(fileName);
                 stage.save();
+                Blob blob = new Blob(fileName);
+                Commit commit = Commit.getCurrentCommit();
+                commit.getBlobTreeMap().put(blob.getFileName(), blob.getid());
+                commit.save();
+                return;
             }
         }
         Blob blob = new Blob(fileName);
