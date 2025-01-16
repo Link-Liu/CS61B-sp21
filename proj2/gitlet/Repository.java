@@ -113,9 +113,18 @@ public class Repository {
     public static void gitGlobalLog() {
         List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
         StringBuilder builder = new StringBuilder();
-        for (String s: log) {
-            Commit curCommit = Commit.load(s);
-            curCommit.printCommit();
+        List<String> commitList = plainFilenamesIn(OBJECT_DIR);
+        Commit commit;
+        for (String id : commitList) {
+            try {
+                commit = Commit.load(id);
+                if (commit.have2Parent()) {
+                    printMergeCommit(commit);
+                } else {
+                    printCommit(commit);
+                }
+            } catch (Exception ignore) {
+            }
         }
     }
 
@@ -158,17 +167,19 @@ public class Repository {
         }
         if (Head.getCurHead().equals(branchName)) {
             System.out.println("No need to checkout the current branch.");
+            return;
         }
         String hash = branchs.get(branchName);
         setBranch(hash);
         Head.checkoutBranch(branchName);
-
     }
+
     /*从head找文件*/
     public static void gitCheckout3(String fileName) {
         String lookedId = Head.getCurHead();
         gitCheckout4(lookedId, fileName);
     }
+
     /*从特定commit找文件*/
     public static void gitCheckout4(String commitId, String fileName) {
         if (commitId.length() < MINCOMMITSIZE) {
@@ -266,4 +277,36 @@ public class Repository {
         return shortHash;
     }
 
+    private static void printCommit(Commit currCommmit) {
+        System.out.println("===");
+        printCommitID(currCommmit);
+        printCommitDate(currCommmit);
+        printCommitMessage(currCommmit);
+    }
+
+    private static void printMergeCommit(Commit currCommmit) {
+        System.out.println("===");
+        printCommitID(currCommmit);
+        printMergeMark(currCommmit);
+        printCommitDate(currCommmit);
+        printCommitMessage(currCommmit);
+    }
+
+    private static void printCommitID(Commit currCommmit) {
+        System.out.println("commit " + currCommmit.getId());
+    }
+
+    private static void printMergeMark(Commit currCommmit) {
+        String parent1 = currCommmit.getParentId();
+        String parent2 = currCommmit.getParentId2();
+        System.out.println("Merge: " + parent1.substring(0, 7) + " " + parent2.substring(0, 7));
+    }
+
+    private static void printCommitDate(Commit currCommmit) {
+        System.out.println("Date: " + currCommmit.getTimeStamp());
+    }
+
+    private static void printCommitMessage(Commit currCommmit) {
+        System.out.println(currCommmit.getMessage() + "\n");
+    }
 }

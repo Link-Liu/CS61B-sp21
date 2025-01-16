@@ -71,6 +71,7 @@ public class Main {
                     case 4:
                         if (!args[2].equals("--")) {
                             System.out.println("Incorrect operands.");
+                            System.exit(0);
                         }
                         Repository.gitCheckout4(args[1], args[3]);
                         break;
