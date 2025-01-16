@@ -1,11 +1,11 @@
 package gitlet;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
-import static gitlet.Utils.readObject;
 import static gitlet.Repository.*;
-import static gitlet.Utils.writeObject;
+import static gitlet.Utils.*;
 
 public class Stage implements Serializable {
     private TreeMap<String, String> addStage;
@@ -45,6 +45,8 @@ public class Stage implements Serializable {
                 return false;
             } else {
                 curCommit.getBlobTreeMap().remove(filename);
+                File file = join(CWD, filename);
+                restrictedDelete(file);
                 this.getRmStages().add(filename);
                 this.save();
                 return true;
