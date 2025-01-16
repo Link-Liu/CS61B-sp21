@@ -26,6 +26,9 @@ public class Head implements Serializable {
 
     public static void checkoutBranch(String branchToCheckout) {
         Head head = Utils.readObject(HEAD, Head.class);
+        if (head.getCurBranch().equals(branchToCheckout)) {
+            System.out.println("No need to checkout the current branch.");
+        }
         head.curBranch = branchToCheckout;
         save(head);
         setId(head.getBranch().get(branchToCheckout));

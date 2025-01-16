@@ -18,8 +18,6 @@ public class Repository {
      *      --blob
      *    --stage
      *    --head
-     *
-     *
      */
 
     /**
@@ -62,11 +60,11 @@ public class Repository {
             return;
         } //错误处理
         TreeMap<String, String> curBlobMap = Commit.getCurrentCommit().getBlobTreeMap();
+        File curFile = join(CWD, fileName);
+        byte[] curContents = readContents(curFile);
         if (curBlobMap.containsKey(fileName)) {
             Blob lookedBlob = Blob.load(curBlobMap.get(fileName));
             byte[] lookedContents = lookedBlob.getContents();
-            File curFile = join(CWD, fileName);
-            byte[] curContents = readContents(curFile);
             if (Arrays.equals(lookedContents, curContents)) {
                 Stage stage = Stage.load();
                 TreeMap<String, String> adddtion = stage.getAddStage();
@@ -77,8 +75,15 @@ public class Repository {
                 return;
             }
         }
-        Blob blob = new Blob(fileName);
         Stage stage = Stage.load();
+        if (stage.getRmStages().containsKey(fileName)) {
+            if (sha1(curContents).equals(stage.getRmStages().get(fileName))) {
+                stage.getRmStages().remove(fileName);
+                stage.save();
+                return;
+            }
+        }
+        Blob blob = new Blob(fileName);
         stage.getAddStage().put(blob.getFileName(), blob.getid());
         stage.save();
     }

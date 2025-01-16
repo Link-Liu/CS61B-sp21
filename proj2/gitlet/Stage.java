@@ -9,11 +9,11 @@ import static gitlet.Utils.*;
 
 public class Stage implements Serializable {
     private TreeMap<String, String> addStage;
-    private TreeSet<String> rmStages;
+    private TreeMap<String, String> rmStages;
 
     Stage() {
         this.addStage = new TreeMap<>();
-        this.rmStages = new TreeSet<>();
+        this.rmStages = new TreeMap<>();
     }
 
     public static Stage load() {
@@ -34,7 +34,7 @@ public class Stage implements Serializable {
         return addStage;
     }
 
-    public TreeSet<String> getRmStages() {
+    public TreeMap<String, String> getRmStages() {
         return rmStages;
     }
 
@@ -47,8 +47,9 @@ public class Stage implements Serializable {
                 curCommit.getBlobTreeMap().remove(filename);
                 curCommit.save();
                 File file = join(CWD, filename);
+                byte[] Content = readContents(file);
                 restrictedDelete(file);
-                this.getRmStages().add(filename);
+                this.getRmStages().put(filename,sha1((Object) Content));
                 this.save();
                 return true;
             }
@@ -62,7 +63,7 @@ public class Stage implements Serializable {
     public static String printStages() {
         Stage stage = Stage.load();
         Set<String> addStages = stage.getAddStage().keySet();
-        Set<String> removeStages = stage.getRmStages();
+        Set<String> removeStages = stage.getRmStages().keySet();
         StringBuilder sb = new StringBuilder();
         sb.append("=== Staged Files ===").append(System.lineSeparator());
         for (String filename : addStages) {
