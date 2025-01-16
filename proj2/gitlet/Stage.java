@@ -47,11 +47,18 @@ public class Stage implements Serializable {
                 curCommit.getBlobTreeMap().remove(filename);
                 curCommit.save();
                 File file = join(CWD, filename);
-                byte[] Content = readContents(file);
-                restrictedDelete(file);
-                this.getRmStages().put(filename,sha1((Object) Content));
-                this.save();
-                return true;
+
+                if (file.exists()) {
+                    byte[] content = readContents(file);
+                    restrictedDelete(file);
+                    this.getRmStages().put(filename, sha1((Object) content));
+                    this.save();
+                    return true;
+                } else {
+                    getRmStages().put(filename, "0");
+                    this.save();
+                    return true;
+                }
             }
         } else {
             this.getAddStage().remove(filename);

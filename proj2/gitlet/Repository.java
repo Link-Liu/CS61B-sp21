@@ -80,7 +80,6 @@ public class Repository {
             if (sha1(curContents).equals(stage.getRmStages().get(fileName))) {
                 stage.getRmStages().remove(fileName);
                 stage.save();
-                return;
             }
         }
         Blob blob = new Blob(fileName);
