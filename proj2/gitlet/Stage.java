@@ -39,17 +39,18 @@ public class Stage implements Serializable {
     }
 
     public boolean remove(String filename) {
-        if (!getAddStage().containsKey(filename)) {
+        if (!this.getAddStage().containsKey(filename)) {
             Commit curCommit = Commit.load(Head.getCurHead());
             if (!curCommit.getBlobTreeMap().containsKey(filename)) {
                 return false;
             } else {
                 curCommit.getBlobTreeMap().remove(filename);
-                rmStages.add(filename);
+                this.rmStages.add(filename);
                 return true;
             }
         } else {
-            getAddStage().remove(filename);
+            this.getAddStage().remove(filename);
+            this.save();
             return true;
         }
     }

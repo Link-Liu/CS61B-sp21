@@ -63,7 +63,7 @@ public class Commit implements Serializable {
             this.blobTreeMap.putAll(parientCommit.getBlobTreeMap());
         }
         Stage stage = Stage.load();
-        if (stage.getAddStage().isEmpty()) {
+        if (stage.getAddStage().isEmpty() && stage.getRmStages().isEmpty()) {
             System.out.println("No changes added to the commit.");
             return false;
         }

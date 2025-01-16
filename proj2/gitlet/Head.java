@@ -27,8 +27,8 @@ public class Head implements Serializable {
     public static void checkoutBranch(String branchToCheckout) {
         Head head = Utils.readObject(HEAD, Head.class);
         head.curBranch = branchToCheckout;
-        setId(head.getBranch().get(branchToCheckout));
         save(head);
+        setId(head.getBranch().get(branchToCheckout));
     }
 
     public static void createBranch(String branchToCreate) {
