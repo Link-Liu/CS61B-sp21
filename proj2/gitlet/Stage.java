@@ -45,7 +45,7 @@ public class Stage implements Serializable {
                 return false;
             } else {
                 curCommit.getBlobTreeMap().remove(filename);
-                this.rmStages.add(filename);
+                this.getRmStages().add(filename);
                 this.save();
                 return true;
             }

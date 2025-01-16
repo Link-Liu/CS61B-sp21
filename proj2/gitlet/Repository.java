@@ -111,7 +111,7 @@ public class Repository {
     }
 
     public static void gitGlobalLog() {
-        List<String> log = plainFilenamesIn(COMMIT_DIR);
+        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
             Commit curCommit = Commit.load(s);
@@ -121,7 +121,7 @@ public class Repository {
     }
 
     public static void gitFind(String massage) {
-        List<String> log = plainFilenamesIn(COMMIT_DIR);
+        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
             Commit curCommit = Commit.load(s);
@@ -130,11 +130,10 @@ public class Repository {
                 builder.append(s).append("\n");
             }
         }
-        builder.deleteCharAt(builder.length() - 1);
         if (builder.length() == 0) {
             System.out.println("Found no commit with that message.");
         } else {
-            System.out.println(builder.toString());
+            System.out.print(builder.toString());
         }
     }
 
@@ -190,7 +189,7 @@ public class Repository {
             File fileToCheckout = join(CWD, fileName);
             writeContents(fileToCheckout, (Object) lookedContents);
         } else {
-            System.out.println("File does not exist.");
+            System.out.println("File does not exist in that commit.");
         }
     }
 
@@ -203,7 +202,7 @@ public class Repository {
     }
 
     public static void reset(String commitId) {
-        List<String> log = plainFilenamesIn(COMMIT_DIR);
+        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
         if (!log.contains(commitId)) {
             System.out.println("No commit with that id exists.");
         } else {
@@ -221,7 +220,7 @@ public class Repository {
             System.out.println(massage + "delete it, or add and commit it first.");
             return;
         }
-        List<String> cwdFileNames = plainFilenamesIn(CWD);
+        List<String> cwdFileNames = Utils.plainFilenamesIn(CWD);
         Commit branchCommit = Commit.load(commitHash);
         TreeMap<String, String> blobMap = branchCommit.getBlobTreeMap();
         for (String fileName: cwdFileNames) {
@@ -249,7 +248,7 @@ public class Repository {
             System.out.println("Short hash is too short to find hash.");
             return shortHash;
         } else {
-            List<String> allCommitIds= plainFilenamesIn(COMMIT_DIR);
+            List<String> allCommitIds = plainFilenamesIn(COMMIT_DIR);
             int count = 0;
             String hash = shortHash;
             for (String commitId: allCommitIds) {
