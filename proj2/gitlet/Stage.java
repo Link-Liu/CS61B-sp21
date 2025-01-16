@@ -45,6 +45,7 @@ public class Stage implements Serializable {
                 return false;
             } else {
                 curCommit.getBlobTreeMap().remove(filename);
+                curCommit.save();
                 File file = join(CWD, filename);
                 restrictedDelete(file);
                 this.getRmStages().add(filename);
@@ -68,11 +69,10 @@ public class Stage implements Serializable {
             sb.append(filename).append(System.lineSeparator());
         }
         sb.append(System.lineSeparator());
-        sb.append("=== Removed Files ===");
+        sb.append("=== Removed Files ===").append(System.lineSeparator());
         for (String filename : removeStages) {
             sb.append(filename).append(System.lineSeparator());
         }
-        sb.append(System.lineSeparator());
         sb.append(System.lineSeparator());
         return sb.toString();
     }
