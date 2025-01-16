@@ -32,6 +32,8 @@ public class Repository {
     public static final File COMMIT_DIR = join(OBJECT_DIR, "commit");  //dir
     public static final File HEAD = join(GITLET_DIR, "head");  //file
 
+    private static final int MINCOMMITSIZE = 40;
+
     public static void gitInit() {
         if (GITLET_DIR.exists()) {
             String msg;
@@ -109,7 +111,7 @@ public class Repository {
     }
 
     public static void gitGlobalLog() {
-        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
+        List<String> log = plainFilenamesIn(COMMIT_DIR);
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
             Commit curCommit = Commit.load(s);
@@ -119,7 +121,7 @@ public class Repository {
     }
 
     public static void gitFind(String massage) {
-        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
+        List<String> log = plainFilenamesIn(COMMIT_DIR);
         StringBuilder builder = new StringBuilder();
         for (String s: log) {
             Commit curCommit = Commit.load(s);
@@ -150,7 +152,7 @@ public class Repository {
         System.out.println(builder.toString());
     }
 
-    public static void gitCheckout2(String branchName) { //branchName是一个哈希值
+    public static void gitCheckout2(String branchName) { //branchName是一个名字
         TreeMap<String, String> branchs = readObject(HEAD, Head.class).getBranch();
         if (!branchs.containsKey(branchName)) {
             System.out.println("No such branch exists.");
@@ -171,7 +173,10 @@ public class Repository {
     }
     /*从特定commit找文件*/
     public static void gitCheckout4(String commitId, String fileName) {
-        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
+        if (commitId.length() < MINCOMMITSIZE) {
+            commitId = findAllHash(commitId);
+        }
+        List<String> log = plainFilenamesIn(COMMIT_DIR);
         if (!log.contains(commitId)) {
             System.out.println("No commit with that id exists.");
             return;
@@ -198,7 +203,7 @@ public class Repository {
     }
 
     public static void reset(String commitId) {
-        List<String> log = Utils.plainFilenamesIn(COMMIT_DIR);
+        List<String> log = plainFilenamesIn(COMMIT_DIR);
         if (!log.contains(commitId)) {
             System.out.println("No commit with that id exists.");
         } else {
@@ -216,7 +221,7 @@ public class Repository {
             System.out.println(massage + "delete it, or add and commit it first.");
             return;
         }
-        List<String> cwdFileNames = Utils.plainFilenamesIn(CWD);
+        List<String> cwdFileNames = plainFilenamesIn(CWD);
         Commit branchCommit = Commit.load(commitHash);
         TreeMap<String, String> blobMap = branchCommit.getBlobTreeMap();
         for (String fileName: cwdFileNames) {
@@ -237,6 +242,30 @@ public class Repository {
             System.out.println("Not in an initialized Gitlet directory.");
             System.exit(0);
         }
+    }
+
+    private static String findAllHash(String shortHash) {
+        if (shortHash.length() < 6) {
+            System.out.println("Short hash is too short to find hash.");
+            return shortHash;
+        } else {
+            List<String> allCommitIds= plainFilenamesIn(COMMIT_DIR);
+            int count = 0;
+            String hash = shortHash;
+            for (String commitId: allCommitIds) {
+                if (commitId.startsWith(shortHash)) {
+                    count++;
+                    hash = commitId;
+                }
+            }
+            if (count == 1) {
+                return hash;
+            } else {
+                System.out.println("More than one commit with that id exists.");
+                System.exit(0);
+            }
+        }
+        return shortHash;
     }
 
 }
