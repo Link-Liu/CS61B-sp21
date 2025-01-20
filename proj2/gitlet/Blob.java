@@ -47,7 +47,7 @@ public class Blob implements Serializable {
         return this.contents;
     }
 
-    public String getContentAsString(){
+    public String getContentAsString() {
         return new String(contents, StandardCharsets.UTF_8);
     }
 }

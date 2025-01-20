@@ -95,6 +95,10 @@ public class Main {
                 Repository.checkInit();
                 Repository.reset(args[1]);
                 break;
+            case "merge":
+                checkNumber(args, 2);
+                Repository.checkInit();
+                Repository.gitMerge(args[1]);
             default:
                 System.out.println("No command with that name exists.");
         }

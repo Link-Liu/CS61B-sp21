@@ -337,7 +337,8 @@ public class Repository {
             System.exit(0);
         }
         boolean hasConflicts = mergeHelper(stage, headCommitId, branchCommitId, splitPointCommitId);
-        String commitMessage =  "Merged" + " " + branchName + " " + "into" + " " + head.getCurBranch() + ".";
+        String commitMessage =  "Merged" + " " + branchName + " ";
+        commitMessage += "into" + " " + head.getCurBranch() + ".";
         new Commit(headCommitId, branchCommitId, commitMessage);
         if (hasConflicts) {
             message("Encountered a merge conflict.");
@@ -428,16 +429,17 @@ public class Repository {
             if (blobhashInBranch != null) { // exist in branch
                 if (!blobhashInBranch.equals(blobhashInSpilt)) { // modified in branch
                     if (blobhashInHead != null) { // exist in head
-                        if (blobhashInHead.equals(blobhashInSpilt)) { // Not modified in head // case 1
+                        if (blobhashInHead.equals(blobhashInSpilt)) { // Not modified in head
                             byte[] contentsToWrite = Blob.load(blobhashInBranch).getContents();
                             writeContents(join(CWD, name), (Object) contentsToWrite);
                             stage.getAddStage().put(name, blobhashInBranch);
-                            stage.save();
+                            stage.save();// case 1
                         } else { // modified in head
-                            if (!blobhashInHead.equals(blobhashInBranch)) { // modified in different way // case 8
-                                hasConflicts = true;
-                                String conflictConnent = getConflictContent(blobhashInHead, blobhashInBranch);
-                                writeContents(join(CWD, name), (Object) conflictConnent);
+                            if (!blobhashInHead.equals(blobhashInBranch)) { // case 8
+                                hasConflicts = true;// modified in different way
+                                String conflict;
+                                conflict = getConflictContent(blobhashInHead, blobhashInBranch);
+                                writeContents(join(CWD, name), (Object) conflict);
                                 Blob blob = new Blob(name);
                                 stage.getAddStage().put(blob.getFileName(), blob.getid());
                                 stage.save();
