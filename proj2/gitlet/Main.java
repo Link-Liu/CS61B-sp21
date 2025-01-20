@@ -99,6 +99,7 @@ public class Main {
                 checkNumber(args, 2);
                 Repository.checkInit();
                 Repository.gitMerge(args[1]);
+                break;
             default:
                 System.out.println("No command with that name exists.");
         }

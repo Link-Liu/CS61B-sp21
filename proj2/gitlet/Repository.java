@@ -433,10 +433,10 @@ public class Repository {
                             byte[] contentsToWrite = Blob.load(blobhashInBranch).getContents();
                             writeContents(join(CWD, name), (Object) contentsToWrite);
                             stage.getAddStage().put(name, blobhashInBranch);
-                            stage.save();// case 1
+                            stage.save(); // case 1
                         } else { // modified in head
                             if (!blobhashInHead.equals(blobhashInBranch)) { // case 8
-                                hasConflicts = true;// modified in different way
+                                hasConflicts = true; // modified in different way
                                 String conflict;
                                 conflict = getConflictContent(blobhashInHead, blobhashInBranch);
                                 writeContents(join(CWD, name), (Object) conflict);
