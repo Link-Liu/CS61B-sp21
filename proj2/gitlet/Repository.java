@@ -478,7 +478,7 @@ public class Repository {
             if (blobhashHead != null) { // add in both
                 if (!blobhashBranch.equals(blobhashHead)) { // modified in different way // case 8
                     hasConflicts = true;
-                    String conflictConnent = getConflictContent(blobhashBranch, blobhashHead);
+                    String conflictConnent = getConflictContent(blobhashHead, blobhashBranch);
                     writeContents(join(CWD, name), (Object) conflictConnent);
                     Blob blob = new Blob(name);
                     stage.getAddStage().put(blob.getFileName(), blob.getid());
