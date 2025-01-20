@@ -62,6 +62,7 @@ public class Head implements Serializable {
         Utils.writeObject(HEAD, head);
     }
 
+    /*return curCommitId*/
     public static String getCurHead() {
         Head head = Utils.readObject(HEAD, Head.class);
         return head.id;
@@ -91,6 +92,7 @@ public class Head implements Serializable {
         return sb.toString();
     }
 
-
-
+    public static Head load() {
+        return Utils.readObject(HEAD, Head.class);
+    }
 }

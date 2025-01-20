@@ -26,9 +26,13 @@ public class Commit implements Serializable {
     public Commit(String idOfParent, String commitMessage) {
         this.commit(idOfParent, commitMessage);
     }
+    public Commit(String idOfCurrentCommit, String idOfMergeCommit, String commitMessage) {
+        this.commit(idOfCurrentCommit, idOfMergeCommit, commitMessage);
+    }
     /*用于初始化*/
     public void commit() {
         this.parentId = null;
+        this.parentId2 = null;
         this.timeStamp = new Date();
         this.message = "initial commit";
         this.blobTreeMap = new TreeMap<>();
@@ -41,6 +45,24 @@ public class Commit implements Serializable {
     /*日常commit*/
     public void commit(String idOfParent, String commitMessage) {
         this.parentId = idOfParent;
+        this.parentId2 = null;
+        this.timeStamp = new Date();
+        this.message = commitMessage;
+        this.blobTreeMap = new TreeMap<>();
+        if (buildTreeMap()) {
+            setShaSet();
+            this.id = getSha1();
+            Head.setId(getId());
+            Stage stage = Stage.load();
+            stage.clear();
+            stage.save();
+            save();
+        }
+    }
+    /*Meege Commit*/
+    public void commit(String idOfCurrentCommit, String idOfMergeCommit, String commitMessage) {
+        this.parentId = idOfCurrentCommit;
+        this.parentId2 = idOfMergeCommit;
         this.timeStamp = new Date();
         this.message = commitMessage;
         this.blobTreeMap = new TreeMap<>();
@@ -171,5 +193,11 @@ public class Commit implements Serializable {
         getShaSet().add(getTimeStamp());
         getShaSet().add(getMessage());
         getShaSet().add(getBlobTreeMap().toString());
+    }
+    public List<String> getParentIdList() {
+        List<String> parentIdList = new LinkedList<>();
+        parentIdList.add(getParentId());
+        parentIdList.add(getParentId2());
+        return parentIdList;
     }
 }

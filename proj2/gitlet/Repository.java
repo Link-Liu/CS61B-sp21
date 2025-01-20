@@ -1,10 +1,8 @@
 package gitlet;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import static gitlet.Utils.*;
 
 /** Represents a gitlet repository.
@@ -317,5 +315,180 @@ public class Repository {
 
     private static void printCommitMessage(Commit currCommmit) {
         System.out.println(currCommmit.getMessage() + "\n");
+    }
+
+    public static void gitMerge(String branchName) {
+        Stage stage = Stage.load();
+        checkStageClean(stage);
+        Head head = Head.load();
+        checkBranchNameExist(branchName, head);
+        checkBranchNotCur(branchName, head);
+        checkUntracked();
+        String headCommitId = Head.getCurHead();
+        String branchCommitId = head.getBranch().get(branchName);
+        String splitPointCommitId = findSplitPointId(headCommitId, branchCommitId);
+        if (splitPointCommitId.equals(headCommitId)) {
+            gitCheckout2(branchName);
+            System.out.println("Current branch fast-forwarded.");
+            System.exit(0);
+        }
+        if (splitPointCommitId.equals(branchCommitId)) {
+            System.out.println("Given branch is an ancestor of the current branch.");
+            System.exit(0);
+        }
+        boolean hasConflicts = mergeHelper(stage, headCommitId, branchCommitId, splitPointCommitId);
+        String commitMessage =  "Merged" + " " + branchName + " " + "into" + " " + head.getCurBranch() + ".";
+        new Commit(headCommitId, branchCommitId, commitMessage);
+        if (hasConflicts) {
+            message("Encountered a merge conflict.");
+        }
+    }
+
+    private static String findSplitPointId(String curCommitId, String branchCommitId) {
+        Queue<String> q = new LinkedList<>();
+        HashSet<String> record = new HashSet<>();
+        q.add(curCommitId);
+        while (!q.isEmpty()) {
+            String commitId = q.poll();
+            Commit curCommit = Commit.load(commitId);
+            for (String parentId : curCommit.getParentIdList()) {
+                if (parentId != null) {
+                    q.add(parentId);
+                    record.add(parentId);
+                }
+            }
+        }
+        q.clear();
+        q.add(branchCommitId);
+        while (!q.isEmpty()) {
+            String commitId = q.poll();
+            Commit curCommit = Commit.load(commitId);
+            if (record.contains(commitId)) {
+                return commitId;
+            }
+            for (String parentId : curCommit.getParentIdList()) {
+                if (parentId != null) {
+                    q.add(parentId);
+                }
+            }
+        }
+        return branchCommitId;
+    }
+    private static String getConflictContent(String currentBlobId, String targetBlobId) {
+        StringBuilder contentBuilder = new StringBuilder();
+        contentBuilder.append("<<<<<<< HEAD").append("\n");
+        if (currentBlobId != null) {
+            Blob currentBlob = Blob.load(currentBlobId);
+            contentBuilder.append(currentBlob.getContentAsString());
+        }
+        contentBuilder.append("=======").append("\n");
+        if (targetBlobId != null) {
+            Blob targetBlob = Blob.load(targetBlobId);
+            contentBuilder.append(targetBlob.getContentAsString());
+        }
+        contentBuilder.append(">>>>>>>");
+        return contentBuilder.toString();
+    }
+    private static void checkBranchNameExist(String branchName, Head head) {
+        if (!head.getBranch().containsKey(branchName)) {
+            System.out.println("A branch with that name does not exist.");
+            System.exit(0);
+        }
+    }
+    private static void checkStageClean(Stage stage) {
+        if (!stage.getAddStage().isEmpty() || !stage.getRmStages().isEmpty()) {
+            System.out.println("You have uncommitted changes.");
+            System.exit(0);
+        }
+    }
+    private static void checkBranchNotCur(String branchName, Head head) {
+        if (head.getCurBranch().equals(branchName)) {
+            System.out.println("Cannot merge a branch with itself.");
+            System.exit(0);
+        }
+    }
+    private static void checkUntracked() {
+        if (!Commit.getUntrackedFileName().isEmpty()) {
+            String massage = "There is an untracked file in the way; ";
+            System.out.println(massage + "delete it, or add and commit it first.");
+            System.exit(0);
+        }
+    }
+
+    private static boolean mergeHelper(Stage stage, String head, String branch, String split) {
+        TreeMap<String, String> headFiles = Commit.load(head).getBlobTreeMap();
+        TreeMap<String, String> branchFiles = Commit.load(branch).getBlobTreeMap();
+        TreeMap<String, String> splitFiles = Commit.load(split).getBlobTreeMap();
+        boolean hasConflicts = false;
+        for (Map.Entry<String, String> entry : splitFiles.entrySet()) {
+            String name = entry.getKey();
+            String blobhashInSpilt = entry.getValue();
+            String blobhashInHead = headFiles.get(name);
+            String blobhashInBranch = branchFiles.get(name);
+            if (blobhashInBranch != null) { // exist in branch
+                if (!blobhashInBranch.equals(blobhashInSpilt)) { // modified in branch
+                    if (blobhashInHead != null) { // exist in head
+                        if (blobhashInHead.equals(blobhashInSpilt)) { // Not modified in head // case 1
+                            byte[] contentsToWrite = Blob.load(blobhashInBranch).getContents();
+                            writeContents(join(CWD, name), (Object) contentsToWrite);
+                            stage.getAddStage().put(name, blobhashInBranch);
+                            stage.save();
+                        } else { // modified in head
+                            if (!blobhashInHead.equals(blobhashInBranch)) { // modified in different way // case 8
+                                hasConflicts = true;
+                                String conflictConnent = getConflictContent(blobhashInHead, blobhashInBranch);
+                                writeContents(join(CWD, name), (Object) conflictConnent);
+                                Blob blob = new Blob(name);
+                                stage.getAddStage().put(blob.getFileName(), blob.getid());
+                                stage.save();
+                            } // both in the same way // case 3
+                        }
+                    } else { //delete in head // case 8
+                        hasConflicts = true;
+                        String conflictConnent = getConflictContent(null, blobhashInBranch);
+                        writeContents(join(CWD, name), (Object) conflictConnent);
+                        Blob blob = new Blob(name);
+                        stage.getAddStage().put(blob.getFileName(), blob.getid());
+                        stage.save();
+                    }
+                } //not modified in beanch // case 2 and 7
+            } else { //delete in branch
+                if (blobhashInHead != null) {
+                    if (blobhashInHead.equals(blobhashInSpilt)) { // Not modified in head // case 6
+                        stage.remove(name);
+                    } else { // modified in head // case 8
+                        hasConflicts = true;
+                        String conflictConnent = getConflictContent(blobhashInHead, null);
+                        writeContents(join(CWD, name), (Object) conflictConnent);
+                        Blob blob = new Blob(name);
+                        stage.getAddStage().put(blob.getFileName(), blob.getid());
+                        stage.save();
+                    }
+                } //delete in head // case 3
+            }
+            headFiles.remove(name);
+            branchFiles.remove(name);
+        }
+        for (Map.Entry<String, String> entry : branchFiles.entrySet()) {
+            String name = entry.getKey();
+            String blobhashBranch = entry.getValue();
+            String blobhashHead = headFiles.get(name);
+            if (blobhashHead != null) { // add in both
+                if (!blobhashBranch.equals(blobhashHead)) { // modified in different way // case 8
+                    hasConflicts = true;
+                    String conflictConnent = getConflictContent(blobhashBranch, blobhashHead);
+                    writeContents(join(CWD, name), (Object) conflictConnent);
+                    Blob blob = new Blob(name);
+                    stage.getAddStage().put(blob.getFileName(), blob.getid());
+                    stage.save();
+                } // both in the same way // case 3
+            } else { // only add in branch // case 5
+                byte[] contentsToWrite = Blob.load(blobhashBranch).getContents();
+                writeContents(join(CWD, name), (Object) contentsToWrite);
+                stage.getAddStage().put(name, blobhashBranch);
+                stage.save();
+            }
+        }
+        return hasConflicts;
     }
 }
