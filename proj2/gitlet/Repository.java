@@ -418,8 +418,8 @@ public class Repository {
 
     private static boolean mergeHelper(Stage stage, String head, String branch, String split) {
         TreeMap<String, String> headFiles = new TreeMap<>(Commit.load(head).getBlobTreeMap());
-        TreeMap<String, String> branchFiles = new TreeMap<>(Commit.load(branch).getBlobTreeMap());
-        TreeMap<String, String> splitFiles = new TreeMap<>(Commit.load(split).getBlobTreeMap());
+        TreeMap<String, String> branchFiles = Commit.load(branch).getBlobTreeMap();
+        TreeMap<String, String> splitFiles = Commit.load(split).getBlobTreeMap();
         boolean hasConflicts = false;
         for (Map.Entry<String, String> entry : splitFiles.entrySet()) {
             String name = entry.getKey();
@@ -458,6 +458,8 @@ public class Repository {
                 if (blobhashInHead != null) {
                     if (blobhashInHead.equals(blobhashInSpilt)) { // Not modified in head // case 6
                         stage.remove(name);
+                        File f = join(CWD, name);
+                        Utils.restrictedDelete(f);
                     } else { // modified in head // case 8
                         hasConflicts = true;
                         String conflictConnent = getConflictContent(blobhashInHead, null);
