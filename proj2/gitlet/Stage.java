@@ -47,7 +47,6 @@ public class Stage implements Serializable {
                 curCommit.getBlobTreeMap().remove(filename);
                 curCommit.save();
                 File file = join(CWD, filename);
-
                 if (file.exists()) {
                     byte[] content = readContents(file);
                     restrictedDelete(file);

@@ -459,7 +459,7 @@ public class Repository {
                     if (blobhashInHead.equals(blobhashInSpilt)) { // Not modified in head // case 6
                         stage.remove(name);
                         File f = join(CWD, name);
-                        Utils.restrictedDelete(f);
+                        f.delete();
                     } else { // modified in head // case 8
                         hasConflicts = true;
                         String conflictConnent = getConflictContent(blobhashInHead, null);
