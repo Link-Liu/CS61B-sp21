@@ -365,6 +365,7 @@ public class Map {
     }
 
     public void showMap() {
+        worldRenderer.startWorldRender();
         worldRenderer.showWorld();
     }
 }

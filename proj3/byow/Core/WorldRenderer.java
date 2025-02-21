@@ -13,8 +13,6 @@ public class WorldRenderer {
     TETile wall = Tileset.MYWALL;
 
     WorldRenderer(int width, int height) {
-        ter = new TERenderer();
-        ter.initialize(width, height);
         this.WIDTH = width;
         this.HEIGHT = height;
         world = new TETile[WIDTH][HEIGHT];
@@ -53,5 +51,10 @@ public class WorldRenderer {
 
     public void putWall(Vector2 place) {
         world[place.x][place.y] = wall;
+    }
+
+    public void startWorldRender() {
+        ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT);
     }
 }
