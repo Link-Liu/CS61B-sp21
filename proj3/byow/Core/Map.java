@@ -39,7 +39,6 @@ public class Map {
         connectRegions(worldRenderer);
         removeDeadEnds(worldRenderer);
         putWall(worldRenderer);
-        worldRenderer.showWorld();
     }
 
     /*生成[min,Max)的随机数*/
@@ -365,4 +364,7 @@ public class Map {
         return this.worldRenderer.world;
     }
 
+    public void showMap() {
+        worldRenderer.showWorld();
+    }
 }
