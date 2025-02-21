@@ -45,8 +45,8 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-
-        TETile[][] finalWorldFrame = null;
+        Map map = new Map(WIDTH, HEIGHT, input, 140, 75);
+        TETile[][] finalWorldFrame = map.getMap();
         return finalWorldFrame;
     }
 }

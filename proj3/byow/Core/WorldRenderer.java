@@ -9,7 +9,8 @@ public class WorldRenderer {
     int WIDTH, HEIGHT;
     TETile[][] world;
     TERenderer ter;
-    TETile floor = Tileset.FLOOR;
+    TETile floor = Tileset.MYFLOOR;
+    TETile wall = Tileset.MYWALL;
 
     WorldRenderer(int width, int height) {
         ter = new TERenderer();
@@ -50,4 +51,7 @@ public class WorldRenderer {
         world[place.x][place.y] = floor;
     }
 
+    public void putWall(Vector2 place) {
+        world[place.x][place.y] = wall;
+    }
 }
