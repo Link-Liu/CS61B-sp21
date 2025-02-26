@@ -3,6 +3,7 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import java.util.*;
+import byow.Core.Vector2;
 
 public class Map {
     int width;
@@ -39,6 +40,7 @@ public class Map {
         connectRegions(worldRenderer);
         removeDeadEnds(worldRenderer);
         putWall(worldRenderer);
+        addUser(worldRenderer);
     }
 
     /*生成[min,Max)的随机数*/
@@ -319,46 +321,17 @@ public class Map {
         }
     }
 
-    // 用于坐标的向量类
-    public class Vector2 implements Comparable<Vector2> {
-        int x;
-        int y;
-
-        public Vector2(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public Vector2 add(Vector2 v2) {
-            return new Vector2(x + v2.x, y + v2.y);
-        }
-
-        public Vector2 sub(Vector2 v) {
-            return new Vector2(x - v.x, y - v.y);
-        }
-
-        private Vector2 div(int n) {
-            return new Vector2(x / n, y / n);
-        }
-
-        private Vector2 mul(int n) {
-            return new Vector2(x * n, y * n);
-        }
-
-        private int sqrMagnitude() {
-            return x * x + y * y;
-        }
-
-        @Override
-        public int compareTo(Vector2 other) {
-            // 先按 x 排序，再按 y 排序
-            if (this.x != other.x) {
-                return Integer.compare(this.x, other.x);
-            } else {
-                return Integer.compare(this.y, other.y);
+    public void addUser(WorldRenderer wr) {
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if (wr.world[i][j] == Tileset.MYFLOOR) {
+                    wr.putUser(new Vector2(i, j));
+                    return;
+                }
             }
         }
     }
+
 
     public TETile[][] getMap() {
         return this.worldRenderer.world;

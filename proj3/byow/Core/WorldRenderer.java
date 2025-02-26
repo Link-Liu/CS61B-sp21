@@ -3,7 +3,7 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import byow.Core.Map.Vector2;
+import byow.Core.Vector2;
 
 public class WorldRenderer {
     int WIDTH, HEIGHT;
@@ -11,6 +11,8 @@ public class WorldRenderer {
     TERenderer ter;
     TETile floor = Tileset.MYFLOOR;
     TETile wall = Tileset.MYWALL;
+    TETile user = Tileset.USER;
+    Vector2 userDir;
 
     WorldRenderer(int width, int height) {
         this.WIDTH = width;
@@ -29,6 +31,10 @@ public class WorldRenderer {
 
     public void showWorld() {
         ter.renderFrame(this.world);
+    }
+
+    public void showWorld(TETile[][] world) {
+        ter.renderFrame(world);
     }
 
     public void roomRender(Room room) {
@@ -57,4 +63,9 @@ public class WorldRenderer {
         ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
     }
+
+    public void putUser(Vector2 place) {
+        world[place.x][place.y] = user;
+    }
+
 }

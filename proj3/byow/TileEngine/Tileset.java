@@ -35,6 +35,7 @@ public class Tileset {
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
     public static final TETile MYFLOOR = new TETile('♠', Color.green, Color.black, "mytree", "byow/TileEngine/floor.png");
     public static final TETile MYWALL = new TETile('#', Color.green, Color.black, "mywall", "byow/TileEngine/wall.png");
+    public static final TETile USER = new TETile('A', Color.green, Color.black, "you", "byow/TileEngine/you.png");
 }
 
 

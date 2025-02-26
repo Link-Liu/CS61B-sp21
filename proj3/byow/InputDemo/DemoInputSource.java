@@ -14,7 +14,6 @@ public class DemoInputSource {
         int inputType = KEYBOARD;
 
         InputSource inputSource;
-
         if (inputType == KEYBOARD) {
             inputSource = new KeyboardInputSource();
         } else if (inputType == RANDOM) {

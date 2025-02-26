@@ -6,14 +6,17 @@ import byow.TileEngine.TETile;
 public class Engine {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
+    public static final int WIDTH = 105;
+    public static final int HEIGHT = 55;
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        Menu m = new Menu(60,55);
+        m.startMenu();
+        m.gameModel();
     }
 
     /**
@@ -38,7 +41,6 @@ public class Engine {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] interactWithInputString(String input) {
-        // TODO: Fill out this method so that it run the engine using the input
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
         // to interactWithKeyboard().
@@ -49,4 +51,12 @@ public class Engine {
         TETile[][] finalWorldFrame = map.getMap();
         return finalWorldFrame;
     }
+
+    public void renderWorldFrame(TETile[][] world) {
+        ter = new TERenderer();
+        ter.initialize(WIDTH, HEIGHT);
+        ter.renderFrame(world);
+    }
+
+
 }
