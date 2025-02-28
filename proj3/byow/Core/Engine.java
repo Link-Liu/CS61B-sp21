@@ -51,8 +51,14 @@ public class Engine {
         if (input.startsWith("n")) {
             finalWorldFrame = handalN(input);
             renderWorldFrame(finalWorldFrame);
+            Save s = new Save();
+            s.clean();
+            if (input.substring(input.length() - 2).equals(":q")) {
+                s.write(input.substring(0,input.length() - 2));
+            }
         } else {
-            finalWorldFrame = new TETile[WIDTH][HEIGHT];
+            finalWorldFrame = handalL(input);
+            renderWorldFrame(finalWorldFrame);
         }
         return finalWorldFrame;
     }
@@ -85,8 +91,11 @@ public class Engine {
         return move.getWorld();
     }
 
-    public void handalL(String input) {
-
+    public TETile[][] handalL(String input) {
+        Save s = new Save();
+        String resetSeed = s.read();
+        TETile[][] world = handalN(resetSeed.substring(0, resetSeed.length()));
+        Move move = new Move(world, input);
+        return move.getWorld();
     }
-
 }
