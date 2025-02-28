@@ -94,6 +94,9 @@ public class Engine {
         String resetSeed = s.read();
         TETile[][] world = handalN(resetSeed.substring(0, resetSeed.length()));
         Move move = new Move(world, input);
+        if (input.substring(input.length() - 2).equals(":q")) {
+            s.write(resetSeed.substring(1,resetSeed.length() - 2));
+        }
         return move.getWorld();
     }
 }
