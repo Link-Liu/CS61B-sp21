@@ -50,7 +50,6 @@ public class Engine {
         TETile[][] finalWorldFrame;
         if (input.startsWith("n")) {
             finalWorldFrame = handalN(input);
-            renderWorldFrame(finalWorldFrame);
             Save s = new Save();
             s.clean();
             if (input.substring(input.length() - 2).equals(":q")) {
@@ -58,7 +57,6 @@ public class Engine {
             }
         } else {
             finalWorldFrame = handalL(input);
-            renderWorldFrame(finalWorldFrame);
         }
         return finalWorldFrame;
     }
