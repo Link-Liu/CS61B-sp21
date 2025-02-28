@@ -4,11 +4,10 @@ import byow.InputDemo.InputSource;
 import byow.InputDemo.KeyboardInputSource;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
-import byow.Core.Vector2;
 import byow.TileEngine.Tileset;
 
 public class Move {
-    TETile [][] world;
+    TETile[][] world;
     Vector2 userPos;
     Vector2 LEFT = new Vector2(-1,0);
     Vector2 RIGHT = new Vector2(1,0);
@@ -17,7 +16,7 @@ public class Move {
     Engine engine;
     TERenderer ter;
 
-    public Move(TETile [][] world,TERenderer ter) {
+    public Move(TETile[][] world,TERenderer ter) {
         this.world = world;
         this.ter = ter;
         engine = new Engine();
@@ -25,33 +24,48 @@ public class Move {
         startMove();
     }
 
+    public Move(TETile[][] world, String key) {
+        this.world = world;
+        findUser();
+        startMove(key.toUpperCase());
+    }
+
     private void startMove() {
         InputSource inputSource = new KeyboardInputSource();
         while (inputSource.possibleNextInput()) {
-            System.out.println("hi");
             char key = inputSource.getNextKey();
-            if (key == 'W') {
-                moveHelper(UP);
-            } else if (key == 'D') {
-                moveHelper(RIGHT);
-            } else if (key == 'A') {
-                moveHelper(LEFT);
-            } else if (key == 'S') {
-                moveHelper(DOWN);
-            }
+            charMoveHelper(key);
+            ter.renderFrame(world);
         }
     }
 
-    public TETile[][] moveHelper(Vector2 direction) {
-        if (isWall(direction.add(userPos))) {
-            return world;
-        } else {
+    private TETile[][] startMove(String input) {
+        for (char c : input.toCharArray()) {
+            if (c != ':') {
+                charMoveHelper(c);
+            }
+        }
+        return getWorld();
+    }
+
+    private void charMoveHelper(char key) {
+        if (key == 'W') {
+            moveHelper(UP);
+        } else if (key == 'D') {
+            moveHelper(RIGHT);
+        } else if (key == 'A') {
+            moveHelper(LEFT);
+        } else if (key == 'S') {
+            moveHelper(DOWN);
+        }
+    }
+
+    public void moveHelper(Vector2 direction) {
+        if (!isWall(direction.add(userPos))) {
             Vector2 dist = direction.add(userPos);
             world[userPos.x][userPos.y] = Tileset.MYFLOOR;
             world[dist.x][dist.y] = Tileset.USER;
             userPos = dist;
-            ter.renderFrame(world);
-            return world;
         }
     }
 
@@ -68,6 +82,10 @@ public class Move {
 
     private boolean isWall(Vector2 pos) {
         return world[pos.x][pos.y] == Tileset.MYWALL;
+    }
+
+    public TETile[][] getWorld() {
+        return world;
     }
 
 

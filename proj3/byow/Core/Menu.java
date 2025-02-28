@@ -50,7 +50,7 @@ public class Menu {
             char c = inputSource.getNextKey();
             if (c == 'N') {
                 String seed = getUserSeed();
-                TETile[][] world = new Map(105,55,"seed", 140 , 75).getMap();
+                TETile[][] world = new Map(105,55,seed, 140 , 75).getMap();
                 gaming(world);
             }
             if (c == 'Q') {

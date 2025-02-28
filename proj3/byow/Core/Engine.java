@@ -47,8 +47,13 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-        Map map = new Map(WIDTH, HEIGHT, input, 140, 75);
-        TETile[][] finalWorldFrame = map.getMap();
+        TETile[][] finalWorldFrame;
+        if (input.startsWith("n")) {
+            finalWorldFrame = handalN(input);
+            renderWorldFrame(finalWorldFrame);
+        } else {
+            finalWorldFrame = new TETile[WIDTH][HEIGHT];
+        }
         return finalWorldFrame;
     }
 
@@ -58,5 +63,30 @@ public class Engine {
         ter.renderFrame(world);
     }
 
+    public int getSeed(String input) {
+        int i = 1; // pass "s"
+        while (i < input.length()) {
+            char c = input.charAt(i);
+            if (Character.isDigit(c)) {
+                i++;
+                continue;
+            }
+            break;
+        }
+        return i;
+    }
+
+    public TETile[][] handalN(String input) {
+        int indexToSplit = getSeed(input);
+        String seed = input.substring(1, indexToSplit);
+        String key = input.substring(indexToSplit);
+        TETile[][] world = new Map(WIDTH, HEIGHT, seed, 140, 75).getMap();
+        Move move = new Move(world, key);
+        return move.getWorld();
+    }
+
+    public void handalL(String input) {
+
+    }
 
 }
