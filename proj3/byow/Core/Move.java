@@ -9,15 +9,15 @@ import byow.TileEngine.Tileset;
 public class Move {
     TETile[][] world;
     Vector2 userPos;
-    Vector2 LEFT = new Vector2(-1,0);
-    Vector2 RIGHT = new Vector2(1,0);
+    Vector2 LEFT = new Vector2(-1, 0);
+    Vector2 RIGHT = new Vector2(1, 0);
     Vector2 UP = new Vector2(0, 1);
     Vector2 DOWN = new Vector2(0, -1);
     Engine engine;
     TERenderer ter;
     String action;
 
-    public Move(TETile[][] world,TERenderer ter) {
+    public Move(TETile[][] world, TERenderer ter) {
         this.world = world;
         this.ter = ter;
         action = "";
@@ -41,7 +41,7 @@ public class Move {
                     char key2 = inputSource.getNextKey();
                     if (key2 == 'Q') {
                         action += ":q";
-                        break;
+                        return;
                     }
                 }
             }

@@ -3,7 +3,6 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import java.util.*;
-import byow.Core.Vector2;
 
 public class Map {
     int width;
@@ -66,7 +65,7 @@ public class Map {
             boolean overlaps = false;  // a flag when true the room will not be added
             Room room = new Room(x, y, w, h);
             for (Room other : rooms) {
-                if (room.IsOverlap(other)) {
+                if (room.isOverlap(other)) {
                     overlaps = true;
                     break;
                 }

@@ -3,7 +3,6 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import byow.Core.Vector2;
 
 public class WorldRenderer {
     int WIDTH, HEIGHT;
@@ -21,10 +20,10 @@ public class WorldRenderer {
         fillwithBlankTiles(world);
     }
 
-    private void fillwithBlankTiles(TETile[][] world) {
+    private void fillwithBlankTiles(TETile[][] worldToFill) {
         for (int x = 0; x < this.WIDTH; x += 1) {
             for (int y = 0; y < this.HEIGHT; y += 1) {
-                world[x][y] = Tileset.NOTHING;
+                worldToFill[x][y] = Tileset.NOTHING;
             }
         }
     }
@@ -33,19 +32,13 @@ public class WorldRenderer {
         ter.renderFrame(this.world);
     }
 
-    public void showWorld(TETile[][] world) {
-        ter.renderFrame(world);
-    }
-
     public void roomRender(Room room) {
         int x = room.x;
         int y = room.y;
         int w = room.w;
         int h = room.h;
-        for (int k = x; k < x + w; ++k)
-        {
-            for (int j = y; j < y + h; ++j)
-            {
+        for (int k = x; k < x + w; ++k) {
+            for (int j = y; j < y + h; ++j) {
                 this.world[k][j] = floor;
             }
         }

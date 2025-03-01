@@ -8,13 +8,16 @@ public class Engine {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 105;
     public static final int HEIGHT = 55;
+    public static final int MENU_WIDTH = 60;
+    public static final int ROOMWANTED = 140;
+    public static final int HOWWIND = 75;
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
-        Menu m = new Menu(60,55);
+        Menu m = new Menu(MENU_WIDTH, HEIGHT);
         m.startMenu();
         m.gameModel();
     }
@@ -53,7 +56,7 @@ public class Engine {
             Save s = new Save();
             s.clean();
             if (input.substring(input.length() - 2).equals(":q")) {
-                s.write(input.substring(0,input.length() - 2));
+                s.write(input.substring(0, input.length() - 2));
             }
         } else {
             finalWorldFrame = handalL(input);
@@ -84,7 +87,7 @@ public class Engine {
         int indexToSplit = getSeed(input);
         String seed = input.substring(1, indexToSplit);
         String key = input.substring(indexToSplit);
-        TETile[][] world = new Map(WIDTH, HEIGHT, seed, 140, 75).getMap();
+        TETile[][] world = new Map(WIDTH, HEIGHT, seed, ROOMWANTED, HOWWIND).getMap();
         Move move = new Move(world, key);
         return move.getWorld();
     }
