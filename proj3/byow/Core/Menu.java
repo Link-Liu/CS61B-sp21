@@ -49,9 +49,22 @@ public class Menu {
         while (inputSource.possibleNextInput()) {
             char c = inputSource.getNextKey();
             if (c == 'N') {
+                Save s = new Save();
+                s.clean();
                 String seed = getUserSeed();
+                s.write("n" + seed );
                 TETile[][] world = new Map(105,55,seed, 140 , 75).getMap();
-                gaming(world);
+                String action = gaming(world);
+                if (!dicidedSave(action)) {
+                    System.exit(0);
+                }
+            }
+            if (c == 'L') {
+                Engine e = new Engine();
+                TETile[][] world = e.interactWithInputString("l");
+                String s = new Save().read();
+                String action = gaming(world);
+                dicidedSave(action);
             }
             if (c == 'Q') {
                 System.out.println("done.");
@@ -94,10 +107,21 @@ public class Menu {
         StdDraw.enableDoubleBuffering();
     }
 
-    public void gaming(TETile[][] world) {
+    public String gaming(TETile[][] world) {
         TERenderer ter = new TERenderer();
         ter.initialize(Engine.WIDTH, Engine.HEIGHT);
         ter.renderFrame(world);
-        new Move(world, ter);
+        Move m = new Move(world, ter);
+        return m.getAction();
     }
+
+    public boolean dicidedSave(String input) {
+        Save s = new Save();
+        if (input.substring(input.length() - 2).equals(":q")) {
+            s.write(input.substring(0,input.length() - 2));
+            return true;
+        }
+        return false;
+    }
+
 }

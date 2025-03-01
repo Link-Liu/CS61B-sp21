@@ -15,10 +15,12 @@ public class Move {
     Vector2 DOWN = new Vector2(0, -1);
     Engine engine;
     TERenderer ter;
+    String action;
 
     public Move(TETile[][] world,TERenderer ter) {
         this.world = world;
         this.ter = ter;
+        action = "";
         engine = new Engine();
         findUser();
         startMove();
@@ -34,6 +36,15 @@ public class Move {
         InputSource inputSource = new KeyboardInputSource();
         while (inputSource.possibleNextInput()) {
             char key = inputSource.getNextKey();
+            if (key == ':') {
+                if (inputSource.possibleNextInput()) {
+                    char key2 = inputSource.getNextKey();
+                    if (key2 == 'Q') {
+                        action += ":q";
+                        break;
+                    }
+                }
+            }
             charMoveHelper(key);
             ter.renderFrame(world);
         }
@@ -51,12 +62,16 @@ public class Move {
     private void charMoveHelper(char key) {
         if (key == 'W') {
             moveHelper(UP);
+            action += key;
         } else if (key == 'D') {
             moveHelper(RIGHT);
+            action += key;
         } else if (key == 'A') {
             moveHelper(LEFT);
+            action += key;
         } else if (key == 'S') {
             moveHelper(DOWN);
+            action += key;
         }
     }
 
@@ -86,6 +101,10 @@ public class Move {
 
     public TETile[][] getWorld() {
         return world;
+    }
+
+    public String getAction() {
+        return action;
     }
 
 
