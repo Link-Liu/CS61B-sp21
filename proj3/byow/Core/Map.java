@@ -99,7 +99,8 @@ public class Map {
 
     /*判断地板属性为NOTHING*/
     private boolean isNothing(Vector2 pos, WorldRenderer wr) {
-        return wr.world[pos.x][pos.y] == Tileset.NOTHING || wr.world[pos.x][pos.y] == Tileset.MYWALL;
+        TETile t = wr.world[pos.x][pos.y];
+        return t == Tileset.NOTHING || wr.world[pos.x][pos.y] == Tileset.MYWALL;
     }
     /*开始填充附近的点*/
     private void growMaze(Vector2 start, WorldRenderer wr, int windingPercent) {
@@ -130,7 +131,7 @@ public class Map {
                     dir = unmadeCells.get(myRandom(0, unmadeCells.size()));
                 }
                 _regions[cell.add(dir).x][cell.add(dir).y] = currentRegionIndex; // 更新_regions数组
-                _regions[cell.add(dir.mul(2)).x][cell.add(dir.mul(2)).y] = currentRegionIndex; // 更新_regions数组
+                _regions[cell.add(dir.mul(2)).x][cell.add(dir.mul(2)).y] = currentRegionIndex;
                 //  记录迷宫
                 wr.carve(cell.add(dir));
                 wr.carve(cell.add(dir.mul(2)));
@@ -306,7 +307,9 @@ public class Map {
                     int neighborX = i + dir.x;
                     int neighborY = j + dir.y;
                     // 边界检查
-                    if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height) {
+                    boolean horizontalOut = neighborX >= 0 && neighborX < width;
+                    boolean verticalOut = neighborY >= 0 && neighborY < height;
+                    if (horizontalOut && verticalOut) {
                         Vector2 neighbor = new Vector2(neighborX, neighborY);
                         if (!isNothing(neighbor, wr)) {
                             exists++;

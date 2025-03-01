@@ -33,9 +33,13 @@ public class Tileset {
     public static final TETile SAND = new TETile('▒', Color.yellow, Color.black, "sand");
     public static final TETile MOUNTAIN = new TETile('▲', Color.gray, Color.black, "mountain");
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
-    public static final TETile MYFLOOR = new TETile('♠', Color.green, Color.black, "mytree", "byow/TileEngine/floor.png");
-    public static final TETile MYWALL = new TETile('#', Color.green, Color.black, "mywall", "byow/TileEngine/wall.png");
-    public static final TETile USER = new TETile('A', Color.green, Color.black, "you", "byow/TileEngine/you.png");
+    public static final String PATH = "byow/TileEngine/";
+    public static final TETile MYFLOOR = new TETile('♠', Color.gray, Color.black, "mytree",
+            PATH + "floor.png");
+    public static final TETile MYWALL = new TETile('#', Color.red, Color.black, "mywall",
+            PATH + "wall.png");
+    public static final TETile USER = new TETile('A', Color.red, Color.black, "you",
+            PATH + "you.png");
 }
 
 

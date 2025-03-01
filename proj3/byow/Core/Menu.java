@@ -59,7 +59,8 @@ public class Menu {
                 s.clean();
                 String seed = getUserSeed();
                 s.write("n" + seed);
-                Map m = new Map(Engine.WIDTH, Engine.HEIGHT, seed, Engine.ROOMWANTED, Engine.HOWWIND);
+                Engine e = new Engine();
+                Map m = new Map(Engine.WIDTH, Engine.HEIGHT, seed, e.ROOMWANTED, e.HOWWIND);
                 TETile[][] world = m.getMap();
                 String action = gaming(world);
                 dicidedSave(action);
